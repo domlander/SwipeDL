@@ -1,16 +1,13 @@
 package com.dominik.swipedl;
 
-import android.os.CountDownTimer;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.math.*;
+        import android.os.CountDownTimer;
+        import android.support.v7.app.ActionBarActivity;
+        import android.os.Bundle;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.MotionEvent;
+        import android.view.View;
+        import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -22,8 +19,6 @@ public class MainActivity extends ActionBarActivity {
     private boolean gameRunning = false;
     private int numSwipes = 0;
 
-    TextView countTV;
-    TextView debugText;
 
     /*
      * Timer that is called after every swipe. After 1 second the total
@@ -47,8 +42,11 @@ public class MainActivity extends ActionBarActivity {
     public double getAngle(double x1, double x2, double y1, double y2) {
         if (y1 == y2) { return 0; }
 
-        // inverse cosine (adjacent/hypotenuse)
-        return Math.acos(y2 - y1 / Math.pow(Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2), 0.5));
+        double adjacent = y2 - y1;
+        double hypotenuse = Math.pow(Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2), 0.5);
+        double angle = Math.acos(adjacent / hypotenuse);
+
+        return angle;
     }
 
     public void onButtonClick(View v) {
@@ -69,8 +67,8 @@ public class MainActivity extends ActionBarActivity {
         // start button has not been pressed
         if (!gameRunning) { return false; }
 
-        countTV = (TextView) findViewById(R.id.count);
-        debugText = (TextView) findViewById(R.id.debugText);
+        TextView countTV = (TextView) findViewById(R.id.count);
+        TextView debugText = (TextView) findViewById(R.id.debugText);
 
         // cancel the timer and hide the current score.
         timer.cancel();
@@ -101,13 +99,13 @@ public class MainActivity extends ActionBarActivity {
                 }
                 debugText.setText(
                         String.format("%.2f", x_start) + " " +
-                        String.format("%.2f", x_end) + " " +
-                        String.format("%.2f", y_start) + " " +
-                        String.format("%.2f", y_end) + " " +
-                        String.format("%.2f", getAngle(x_start, x_end, y_start, y_end)) + " " +
-                        String.format("%.2f", swipe.getY()) + " " +
-                        String.format("%.2f", y_current) + " " +
-                        Boolean.toString(crossNS));
+                                String.format("%.2f", x_end) + " " +
+                                String.format("%.2f", y_start) + " " +
+                                String.format("%.2f", y_end) + " " +
+                                String.format("%.2f", getAngle(x_start, x_end, y_start, y_end)) + " " +
+                                String.format("%.2f", swipe.getY()) + " " +
+                                String.format("%.2f", y_current) + " " +
+                                Boolean.toString(crossNS));
                 break;
 
             case MotionEvent.ACTION_UP:
