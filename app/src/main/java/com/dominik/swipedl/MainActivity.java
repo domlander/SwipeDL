@@ -1,25 +1,22 @@
 package com.dominik.swipedl;
-
-        import android.os.CountDownTimer;
-        import android.support.v7.app.ActionBarActivity;
-        import android.os.Bundle;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.widget.TextView;
+import android.os.CountDownTimer;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
-    // For a swipe to count, the player must be within ALLOWED_ANGLE
-    // degrees from vertical.
+    // For a swipe to count, the player must be within ALLOWED_ANGLE degrees from vertical.
     private final double ALLOWED_ANGLE_DEGREES = 15;
 
-    private final double ALLOWED_ANGLE_RADS = ALLOWED_ANGLE_DEGREES * 0.0174532925;
     private boolean gameRunning = false;
     private int numSwipes = 0;
-
-
+    TextView countTV;
+    TextView debugText;
     /*
      * Timer that is called after every swipe. After 1 second the total
      * number of swipes is displayed.
@@ -30,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void onFinish() {
-            TextView countTV = (TextView) findViewById(R.id.count);
+            countTV = (TextView) findViewById(R.id.count);
             countTV.setText(Integer.toString(numSwipes));
         }
     };
@@ -42,11 +39,10 @@ public class MainActivity extends ActionBarActivity {
     public double getAngle(double x1, double x2, double y1, double y2) {
         if (y1 == y2) { return 0; }
 
-        double adjacent = y2 - y1;
-        double hypotenuse = Math.pow(Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2), 0.5);
-        double angle = Math.acos(adjacent / hypotenuse);
+        //double adjacent = y2 - y1;
+        //double hypotenuse = Math.pow(Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2), 0.5);
 
-        return angle;
+        return Math.acos((y2 - y1) / (Math.pow(Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2), 0.5)));
     }
 
     public void onButtonClick(View v) {
@@ -57,9 +53,9 @@ public class MainActivity extends ActionBarActivity {
     // Registers the co-ordinates of the user touching the screen and releasing.
     double x_start, x_end;
     double y_start, y_end;
-
     double y_current; // current y value of the drag
     boolean crossNS = false;
+
     /*
      * Called when the user touches the screen.
      */
@@ -67,8 +63,8 @@ public class MainActivity extends ActionBarActivity {
         // start button has not been pressed
         if (!gameRunning) { return false; }
 
-        TextView countTV = (TextView) findViewById(R.id.count);
-        TextView debugText = (TextView) findViewById(R.id.debugText);
+        countTV = (TextView) findViewById(R.id.count);
+        debugText = (TextView) findViewById(R.id.debugText);
 
         // cancel the timer and hide the current score.
         timer.cancel();
@@ -97,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
                         }
                     }
                 }
-                debugText.setText(
+                /*debugText.setText(
                         String.format("%.2f", x_start) + " " +
                                 String.format("%.2f", x_end) + " " +
                                 String.format("%.2f", y_start) + " " +
@@ -105,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
                                 String.format("%.2f", getAngle(x_start, x_end, y_start, y_end)) + " " +
                                 String.format("%.2f", swipe.getY()) + " " +
                                 String.format("%.2f", y_current) + " " +
-                                Boolean.toString(crossNS));
+                                Boolean.toString(crossNS));*/
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -116,21 +112,19 @@ public class MainActivity extends ActionBarActivity {
                     numSwipes += 1;
                 }
                 crossNS = false;
-
                 break;
         }
         timer.start();
         return false;
     }
 
+    // Legal drag if end point is lower than start point and the angle is within the specified
+    // allowed limit. Converts degrees to radians.
     private boolean isLegalDrag(MotionEvent swipe) {
         x_end = swipe.getX();
         y_end = swipe.getY();
-        if ((y_end > y_start) &&
-                (getAngle(x_start, x_end, y_start, y_end) <= ALLOWED_ANGLE_RADS)) {
-            return true;
-        }
-        return false;
+        return ((y_end > y_start) &&
+                (getAngle(x_start, x_end, y_start, y_end) <= ALLOWED_ANGLE_DEGREES * 0.0174532925));
     }
 
     @Override
