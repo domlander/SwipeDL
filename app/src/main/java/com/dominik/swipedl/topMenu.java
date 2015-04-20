@@ -41,7 +41,8 @@ public class topMenu extends ActionBarActivity implements View.OnClickListener {
 
     }
 
-    /* This will check whether a button has been pressed and if true call
+    /*
+     * This will check whether a button has been pressed and if true call
      * the appropriate method.
      */
     public void onClick(View v) {
