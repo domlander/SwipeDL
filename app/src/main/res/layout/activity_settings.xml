@@ -1,0 +1,147 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center|top"
+    tools:context="com.dominik.swipedl.Settings">
+
+    <TextView
+        android:id="@+id/Settings"
+        android:text="@string/settings"
+        android:textSize="40sp"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50sp"
+        android:layout_marginBottom="50sp" />
+
+    <Button
+        android:id="@+id/OnePlayer"
+        android:text="@string/one_player"
+        android:layout_below="@+id/Settings"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/TwoPlayer"
+        android:text="@string/two_players"
+        android:layout_below="@+id/Settings"
+        android:layout_toRightOf="@+id/OnePlayer"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/TimeLimit"
+        android:text="@string/time_limit"
+        android:layout_below="@+id/OnePlayer"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-8sp"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/DragLimit"
+        android:text="@string/drag_limit"
+        android:layout_below="@+id/OnePlayer"
+        android:layout_toRightOf="@+id/TimeLimit"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/GameModeOptionOne"
+        android:text="@string/option_one"
+        android:layout_below="@+id/TimeLimit"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/GameModeOptionTwo"
+        android:text="@string/option_two"
+        android:layout_below="@+id/TimeLimit"
+        android:layout_toRightOf="@+id/GameModeOptionOne"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/GameModeOptionThree"
+        android:text="@string/option_three"
+        android:layout_below="@+id/TimeLimit"
+        android:layout_toRightOf="@+id/GameModeOptionTwo"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Easy"
+        android:text="@string/easy"
+        android:layout_below="@+id/GameModeOptionOne"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40sp"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Medium"
+        android:text="@string/medium"
+        android:layout_below="@+id/GameModeOptionOne"
+        android:layout_toRightOf="@+id/Easy"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Hard"
+        android:text="@string/hard"
+        android:layout_below="@+id/GameModeOptionOne"
+        android:layout_toRightOf="@+id/Medium"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Save"
+        android:text="@string/save"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Easy"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:id="@+id/Cancel"
+        android:text="@string/cancel"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Easy"
+        android:layout_toRightOf="@+id/Medium" />
+
+    <TextView
+        android:id="@+id/debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Save"
+        android:text="" />
+
+</RelativeLayout>
