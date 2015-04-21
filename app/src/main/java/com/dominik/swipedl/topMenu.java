@@ -69,7 +69,7 @@ public class topMenu extends ActionBarActivity implements View.OnClickListener {
     }
 
     private void highScoresButtonClicked() {
-        // TODO Create High Scores activity
+        // TODO Create High Scores activity.
         // Intent goToHighScores = new Intent(this, MainActivity.class);
         // startActivity(goToHighScores);
     }
