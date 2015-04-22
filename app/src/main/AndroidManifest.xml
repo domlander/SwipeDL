@@ -14,7 +14,8 @@
         </activity>
         <activity
             android:name=".topMenu"
-            android:label="@string/title_activity_top_menu" >
+            android:label="@string/title_activity_top_menu"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +24,8 @@
         </activity>
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

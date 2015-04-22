@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="65sp"
+        android:layout_marginTop="65dp"
         android:text="@string/swipe"
         android:textSize="80sp"
         android:textStyle="bold|italic" />
@@ -21,34 +21,34 @@
         android:layout_height="wrap_content"
         android:text="@string/start_game"
         android:id="@+id/start_game_button"
-        android:layout_marginTop="65sp" />
+        android:layout_marginTop="65dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings"
         android:id="@+id/settings_button"
-        android:layout_marginTop="20sp" />
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/high_scores"
         android:id="@+id/high_scores_button"
-        android:layout_marginTop="20sp" />
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/how_to_play"
         android:id="@+id/how_to_play_button"
-        android:layout_marginTop="20sp" />
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/debug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="10dp"
         android:text="" />
 
 </LinearLayout>

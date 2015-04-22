@@ -18,16 +18,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="50sp"
-        android:layout_marginBottom="50sp" />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp" />
 
     <Button
         android:id="@+id/OnePlayer"
         android:text="@string/one_player"
         android:layout_below="@+id/Settings"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp"
+        android:layout_marginBottom="10dp"
         android:clickable="true"
         android:textAllCaps="false" />
 
@@ -36,7 +36,7 @@
         android:text="@string/two_players"
         android:layout_below="@+id/Settings"
         android:layout_toRightOf="@+id/OnePlayer"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:textAllCaps="false" />
@@ -45,9 +45,9 @@
         android:id="@+id/TimeLimit"
         android:text="@string/time_limit"
         android:layout_below="@+id/OnePlayer"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="-8sp"
+        android:layout_marginBottom="-8dp"
         android:clickable="true"
         android:textAllCaps="false" />
 
@@ -56,7 +56,7 @@
         android:text="@string/drag_limit"
         android:layout_below="@+id/OnePlayer"
         android:layout_toRightOf="@+id/TimeLimit"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:textAllCaps="false" />
@@ -65,9 +65,9 @@
         android:id="@+id/GameModeOptionOne"
         android:text="@string/option_one"
         android:layout_below="@+id/TimeLimit"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp"
+        android:layout_marginBottom="10dp"
         android:clickable="true"
         android:textAllCaps="false" />
 
@@ -76,7 +76,7 @@
         android:text="@string/option_two"
         android:layout_below="@+id/TimeLimit"
         android:layout_toRightOf="@+id/GameModeOptionOne"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:textAllCaps="false" />
@@ -86,7 +86,7 @@
         android:text="@string/option_three"
         android:layout_below="@+id/TimeLimit"
         android:layout_toRightOf="@+id/GameModeOptionTwo"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:textAllCaps="false" />
@@ -95,9 +95,9 @@
         android:id="@+id/Easy"
         android:text="@string/easy"
         android:layout_below="@+id/GameModeOptionOne"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40sp"
+        android:layout_marginBottom="40dp"
         android:clickable="true"
         android:textAllCaps="false" />
 
@@ -106,7 +106,7 @@
         android:text="@string/medium"
         android:layout_below="@+id/GameModeOptionOne"
         android:layout_toRightOf="@+id/Easy"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:textAllCaps="false" />
@@ -116,7 +116,7 @@
         android:text="@string/hard"
         android:layout_below="@+id/GameModeOptionOne"
         android:layout_toRightOf="@+id/Medium"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:textAllCaps="false" />
@@ -124,7 +124,7 @@
     <Button
         android:id="@+id/Save"
         android:text="@string/save"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Easy"
         android:layout_alignParentLeft="true" />
@@ -132,7 +132,7 @@
     <Button
         android:id="@+id/Cancel"
         android:text="@string/cancel"
-        android:layout_width="100sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Easy"
         android:layout_toRightOf="@+id/Medium" />

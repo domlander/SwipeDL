@@ -19,6 +19,13 @@ public class MainActivity extends ActionBarActivity {
     private int numSwipes = 0;
     TextView countTV;
     TextView debugText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
     /*
      * Timer that is called after every swipe. After 1 second the total
      * number of swipes is displayed.
@@ -129,12 +136,6 @@ public class MainActivity extends ActionBarActivity {
                 String.format("%.2f", swipe.getY()) + " " +
                 String.format("%.2f", y_current) + " " +
                 Boolean.toString(crossNS));
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
     }
 
     @Override

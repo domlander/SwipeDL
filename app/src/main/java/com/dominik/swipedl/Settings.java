@@ -9,41 +9,60 @@ import android.view.View;
 import android.widget.Button;
 import android.graphics.Color;
 
+import java.util.Arrays;
+
 public class Settings extends ActionBarActivity implements View.OnClickListener {
     // TODO image and audio
-
-    Intent returnHome;
 
     private int numPlayers;
     private boolean timeLimit;
     private int gameModeOption;
     private int difficulty;
 
-    Button one_player_button;
-    Button two_player_button;
-    Button time_limit_button;
-    Button drag_limit_button;
-    Button game_mode_option_one_button;
-    Button game_mode_option_two_button;
-    Button game_mode_option_three_button;
-    Button easy_button;
-    Button medium_button;
-    Button hard_button;
-    Button save_button;
-    Button cancel_button;
+    private Button one_player_button;
+    private Button two_player_button;
+    private Button time_limit_button;
+    private Button drag_limit_button;
+    private Button game_mode_option_one_button;
+    private Button game_mode_option_two_button;
+    private Button game_mode_option_three_button;
+    private Button easy_button;
+    private Button medium_button;
+    private Button hard_button;
+    private Button save_button;
+    private Button cancel_button;
+
+    public static Object[] settings = new Object[4];
+
+    Intent returnHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        returnHome = new Intent(this, topMenu.class);
+
+        // Default settings
+        settings[0] = 1; //numPlayers = single player
+        settings[1] = true; //timeLimit = true
+        settings[2] = 3; // gameModeOption = 60seconds
+        settings[3] = 1; // difficulty = easy
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setContentView(R.layout.activity_settings);
 
-        // Get current settings values
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        numPlayers = Integer.parseInt(extras.getString("NUM_PLAYERS"));
-        timeLimit = Boolean.parseBoolean(extras.getString("TIME_LIMIT"));
-        gameModeOption = Integer.parseInt(extras.getString("GAME_MODE_OPTION"));
-        difficulty = Integer.parseInt(extras.getString("DIFFICULTY"));
+        numPlayers = (int) settings[0];
+        timeLimit = (boolean) settings[1];
+        gameModeOption = (int) settings[2];
+        difficulty = (int) settings[3];
 
         one_player_button = (Button) findViewById(R.id.OnePlayer);
         one_player_button.setOnClickListener(this);
@@ -151,6 +170,29 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         updateButtonState();
     }
 
+    private void onePlayerSelected() { numPlayers = 1; }
+    private void twoPlayersSelected() { numPlayers = 2; }
+
+    private void timeLimitSelected() {
+        timeLimit = true;
+    }
+
+    private void dragLimitSelected() {
+        timeLimit = false;
+    }
+
+    private void seconds10Selected() { gameModeOption = 1; }
+    private void seconds30Selected() { gameModeOption = 2; }
+    private void seconds60Selected() { gameModeOption = 3; }
+
+    private void drags10Selected() { gameModeOption = 1; }
+    private void drags50Selected() { gameModeOption = 2; }
+    private void drags100Selected() { gameModeOption = 3; }
+
+    private void easySelected() { difficulty = 1; }
+    private void mediumSelected() { difficulty = 2; }
+    private void hardSelected() { difficulty = 3; }
+
     // Button selected ? button colour = green : button colour = grey
     private void updateButtonState() {
 
@@ -214,48 +256,24 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         selectedTimeLimit.setBackgroundColor(Color.GREEN);
         selectedGameModeOption.setBackgroundColor(Color.GREEN);
         selectedDifficulty.setBackgroundColor(Color.GREEN);
-
     }
-
-    private void onePlayerSelected() { numPlayers = 1; }
-    private void twoPlayersSelected() { numPlayers = 2; }
-
-    private void timeLimitSelected() {
-        timeLimit = true;
-    }
-
-    private void dragLimitSelected() {
-        timeLimit = false;
-    }
-
-    private void seconds10Selected() { gameModeOption = 1; }
-    private void seconds30Selected() { gameModeOption = 2; }
-    private void seconds60Selected() { gameModeOption = 3; }
-
-    private void drags10Selected() { gameModeOption = 1; }
-    private void drags50Selected() { gameModeOption = 2; }
-    private void drags100Selected() { gameModeOption = 3; }
-
-    private void easySelected() { difficulty = 1; }
-    private void mediumSelected() { difficulty = 2; }
-    private void hardSelected() { difficulty = 3; }
 
     private void saveSelected() {
-        returnHome = new Intent(this, topMenu.class);
-        Bundle extras = new Bundle();
-        extras.putString("NUM_PLAYERS", Integer.toString(numPlayers));
-        extras.putString("TIME_LIMIT", Boolean.toString(timeLimit));
-        extras.putString("GAME_MODE_OPTION", Integer.toString(gameModeOption));
-        extras.putString("DIFFICULTY", Integer.toString(difficulty));
-        returnHome.putExtras(extras);
-        startActivity(returnHome);
+        settings[0] = numPlayers;
+        settings[1] = timeLimit;
+        settings[2] = gameModeOption;
+        settings[3] = difficulty;
+
+        returnHome();
     }
 
     private void cancelSelected() {
-        returnHome = new Intent(this, topMenu.class);
-        startActivity(returnHome);
+        returnHome();
     }
 
+    private void returnHome() {
+        startActivity(returnHome);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -275,7 +293,6 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
