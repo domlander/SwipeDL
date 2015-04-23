@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity {
+public class Game extends ActionBarActivity {
 
     // For a swipe to count, the player must be within ALLOWED_ANGLE degrees from vertical.
     private final double ALLOWED_ANGLE_DEGREES = 15;
