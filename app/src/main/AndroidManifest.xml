@@ -8,12 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".topMenu"
+            android:name=".TopMenu"
             android:label="@string/title_activity_top_menu"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -23,8 +18,23 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Game"
+            android:label="@string/app_name"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>
+        <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".HighScores"
+            android:label="@string/title_activity_high_scores"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Instructions"
+            android:label="@string/title_activity_instructions"
             android:screenOrientation="portrait" >
         </activity>
     </application>

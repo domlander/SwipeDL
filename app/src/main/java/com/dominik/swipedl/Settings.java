@@ -1,6 +1,8 @@
 package com.dominik.swipedl;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.graphics.Color;
 
-import java.util.Arrays;
-
 public class Settings extends ActionBarActivity implements View.OnClickListener {
     // TODO image and audio
+
+    SharedPreferences sharedPrefs;
 
     private int numPlayers;
     private boolean timeLimit;
@@ -32,37 +34,16 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     private Button save_button;
     private Button cancel_button;
 
-    public static Object[] settings = new Object[4];
-
-    Intent returnHome;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        returnHome = new Intent(this, topMenu.class);
-
-        // Default settings
-        settings[0] = 1; //numPlayers = single player
-        settings[1] = true; //timeLimit = true
-        settings[2] = 3; // gameModeOption = 60seconds
-        settings[3] = 1; // difficulty = easy
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         setContentView(R.layout.activity_settings);
 
-        numPlayers = (int) settings[0];
-        timeLimit = (boolean) settings[1];
-        gameModeOption = (int) settings[2];
-        difficulty = (int) settings[3];
+        sharedPrefs = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        numPlayers = sharedPrefs.getInt("numPlayers", 1);
+        timeLimit = sharedPrefs.getBoolean("timeLimit", true);
+        gameModeOption = sharedPrefs.getInt("gameModeOption", 3);
+        difficulty = sharedPrefs.getInt("difficulty", 1);
 
         one_player_button = (Button) findViewById(R.id.OnePlayer);
         one_player_button.setOnClickListener(this);
@@ -259,10 +240,16 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     }
 
     private void saveSelected() {
-        settings[0] = numPlayers;
-        settings[1] = timeLimit;
-        settings[2] = gameModeOption;
-        settings[3] = difficulty;
+
+        sharedPrefs = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        editor.putInt("numPlayers", numPlayers);
+        editor.putBoolean("timeLimit", timeLimit);
+        editor.putInt("gameModeOption", gameModeOption);
+        editor.putInt("difficulty", difficulty);
+
+        editor.apply();
 
         returnHome();
     }
@@ -272,6 +259,7 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     }
 
     private void returnHome() {
+        Intent returnHome = new Intent(this, TopMenu.class);
         startActivity(returnHome);
     }
 

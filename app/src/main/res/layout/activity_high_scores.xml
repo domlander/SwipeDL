@@ -1,12 +1,226 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_gravity="center|top"
     tools:context="com.dominik.swipedl.HighScoresActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/HighScores"
+        android:text="@string/high_scores"
+        android:textSize="40sp"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp" />
+
+    <Button
+        android:id="@+id/Individual"
+        android:text="Individual"
+        android:layout_below="@+id/HighScores"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Group"
+        android:text="Group"
+        android:layout_below="@+id/HighScores"
+        android:layout_toRightOf="@+id/Individual"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/World"
+        android:text="World"
+        android:layout_below="@+id/HighScores"
+        android:layout_toRightOf="@+id/Group"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <LinearLayout
+        android:id="@+id/SelectGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Individual"
+        android:layout_alignLeft="@id/Individual"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="-30dp"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:id="@+id/SelectGroupText"
+            android:text="@string/select_group"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="fill_parent" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/Best10s"
+        android:text="Best 10s score:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SelectGroup"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
+        android:id="@+id/Best30s"
+        android:text="Best 30s score:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best10s"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
+        android:id="@+id/Best60s"
+        android:text="Best 60s score:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best30s"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
+        android:id="@+id/Best10drags"
+        android:text="Best 10 drags time:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best60s"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
+        android:id="@+id/Best50drags"
+        android:text="Best 50 drags time:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best10drags"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
+        android:id="@+id/Best100drags"
+        android:text="Best 100 drags time:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best50drags"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
+        android:id="@+id/Best10sValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SelectGroup"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:id="@+id/Best30sValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best10s"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:id="@+id/Best60sValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best30s"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:id="@+id/Best10dragsValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best60s"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:id="@+id/Best50dragsValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best10drags"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:id="@+id/Best100dragsValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best50drags"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:text="@string/seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SelectGroup"
+        android:layout_toRightOf="@id/Best10sValue"
+        android:layout_marginLeft="3dp" />
+
+    <TextView
+        android:text="@string/seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best10s"
+        android:layout_toRightOf="@id/Best10sValue"
+        android:layout_marginLeft="3dp" />
+
+    <TextView
+        android:text="@string/seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best30s"
+        android:layout_toRightOf="@id/Best10sValue"
+        android:layout_marginLeft="3dp" />
+
+    <TextView
+        android:text="@string/drags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best60s"
+        android:layout_toRightOf="@id/Best60sValue"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="3dp" />
+
+    <TextView
+        android:text="@string/drags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best10dragsValue"
+        android:layout_toRightOf="@id/Best50dragsValue"
+        android:layout_marginLeft="3dp" />
+
+    <TextView
+        android:text="@string/drags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best50dragsValue"
+        android:layout_toRightOf="@id/Best100dragsValue"
+        android:layout_marginLeft="3dp" />
 
 </RelativeLayout>

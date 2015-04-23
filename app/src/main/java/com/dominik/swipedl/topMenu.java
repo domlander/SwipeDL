@@ -7,22 +7,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.Arrays;
 
 
-public class topMenu extends ActionBarActivity implements View.OnClickListener {
+public class TopMenu extends ActionBarActivity implements View.OnClickListener {
 
     Button start_game_button;
     Button settings_button;
+    Button high_scores_button;
     Button how_to_play_button;
-    TextView debug;
 
     Intent goToGame;
     Intent goToSettings;
-    Intent goToHighScores = new Intent(this, MainActivity.class);
-    Intent goToInstructions = new Intent(this, MainActivity.class);
+    Intent goToHighScores;
+    Intent goToInstructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +32,16 @@ public class topMenu extends ActionBarActivity implements View.OnClickListener {
         settings_button = (Button) findViewById(R.id.settings_button);
         settings_button.setOnClickListener(this);
 
+        high_scores_button = (Button) findViewById(R.id.high_scores_button);
+        high_scores_button.setOnClickListener(this);
+
         how_to_play_button = (Button) findViewById(R.id.how_to_play_button);
         how_to_play_button.setOnClickListener(this);
 
-        goToGame = new Intent(this, MainActivity.class);
+        goToGame = new Intent(this, Game.class);
         goToSettings = new Intent(this, Settings.class);
-        // goToHighScores = new Intent(this, classname.class);
-        // goToInstructions = new Intent(this, classname.class);
+        goToHighScores = new Intent(this, HighScores.class);
+        goToInstructions = new Intent(this, Instructions.class);
     }
 
     /*
@@ -68,23 +68,10 @@ public class topMenu extends ActionBarActivity implements View.OnClickListener {
         }
     }
 
-    private void startGameButtonClicked() {
-        startActivity(goToGame);
-    }
-
-    private void settingsButtonClicked() {
-        startActivity(goToSettings);
-    }
-
-    // TODO Create High Scores activity
-    private void highScoresButtonClicked() {
-        // startActivity(goToHighScores);
-    }
-
-    // TODO Create Instructions activity
-    private void howToPlayButtonClicked() {
-        // startActivity(goToInstructions);
-    }
+    private void startGameButtonClicked() { startActivity( goToGame ); }
+    private void settingsButtonClicked() { startActivity( goToSettings ); }
+    private void highScoresButtonClicked() { startActivity( goToHighScores ); }
+    private void howToPlayButtonClicked() { startActivity( goToInstructions ); }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
