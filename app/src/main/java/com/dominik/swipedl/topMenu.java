@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-
 public class TopMenu extends ActionBarActivity implements View.OnClickListener {
 
     Button start_game_button;
