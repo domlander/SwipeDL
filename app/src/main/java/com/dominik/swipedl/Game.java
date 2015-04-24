@@ -2,26 +2,20 @@ package com.dominik.swipedl;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Game extends ActionBarActivity {
 
     TextView countTV;
     SurfaceView dragArea;
-    SurfaceView dragAreaBorder;
     TextView debugText;
     Button pauseButton;
 
@@ -29,6 +23,7 @@ public class Game extends ActionBarActivity {
     private int numSwipes = 0;
     private final String UP = "UP";
     private final String DOWN = "DOWN";
+
     String swipeDirection;
     boolean crossedNS; // if true, the user has changed swipe directions.
 
@@ -51,11 +46,98 @@ public class Game extends ActionBarActivity {
         int gameModeOption = sharedPrefs.getInt("gameModeOption", 3);
         int difficulty = sharedPrefs.getInt("difficulty", 1);
 
+        dragArea = (SurfaceView) findViewById(R.id.dragArea);
         setDragArea(difficulty);
+
+        dragArea.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent swipe) {
+                // start button has not been pressed
+                if (!gameRunning) { return false; }
+
+                countTV = (TextView) findViewById(R.id.count);
+
+                switch (swipe.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Set initial values when user first touches drag area.
+                        x_start = swipe.getX();
+                        y_start = y_min = y_max = swipe.getY();
+                        swipeDirection = "";
+//                      debugText(swipe,"down");
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+
+                        // If user has already changed direction, the isLegalDrag()
+                        // calculation will have already been covered in this case.
+                        if (!crossedNS) {
+
+                            // set the initial direction of the drag.
+                            if (swipe.getY() > y_start) {
+                                swipeDirection = DOWN;
+                            } else if (swipe.getY() < y_start) {
+                                swipeDirection = UP;
+                            }
+
+                            // if the drag is going down and the current y value
+                            // is lower than the highest recorded value of y (y_max),
+                            // then the direction has changed.
+                            if (swipeDirection.equals(DOWN)) {
+                                if (swipe.getY() <= y_max) {
+                                    crossedNS = true;
+                                } else {
+                                    // y still going down => update y_max with new current value.
+                                    y_max = swipe.getY();
+                                }
+
+                            // The same as above but with the initial drag direction going up.
+                            } else if (swipeDirection.equals(UP)) {
+                                if (swipe.getY() >= y_min) {
+                                    crossedNS = true;
+                                } else {
+                                    y_min = swipe.getY();
+                                }
+                            }
+
+                            // If the north-south divide has been crossed the drag ends.
+                            if ((crossedNS) && (isLegalDrag(swipe))) {
+                                numSwipes += 1;
+                            }
+                        }
+//                      debugText(swipe,"move");
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // If the north-south divide has been crossed, the isLegalDrag()
+                        // calculation has already been covered in MotionEvent.ACTION_MOVE.
+                        if ((!crossedNS) && (isLegalDrag(swipe))) {
+                            numSwipes += 1;
+                        }
+                        crossedNS = false;
+//                      debugText(swipe,"up");
+                        break;
+                }
+                countTV.setText(Integer.toString(numSwipes));
+                return true;
+            }
+        });
     }
 
-    private void setDragArea(int difficulty) {
+    // Finds gradient. If angle between drag and vertical line is <15degrees, drag is legal.
+    private boolean isLegalDrag(MotionEvent swipe) {
+        x_end = swipe.getX();
+        y_end = swipe.getY();
 
+        // In case x_start == x_end -> avoid dividing by zero
+        if (x_start == x_end) {
+            return (y_start != y_end);
+        }
+
+        return ((y_start != y_end) &&
+                (Math.abs((y_end - y_start) / (x_end - x_start)) >= 3.73205)); // 15 degrees from vertical
+    }
+
+    // Sets the size of the drag area dependant on the difficulty level.
+    private void setDragArea(int difficulty) {
         switch (difficulty) {
             case 1: // easy
             default:
@@ -72,8 +154,8 @@ public class Game extends ActionBarActivity {
         }
     }
 
+    // Sets the size of the drag area that the user swipes in
     private void resizeDragArea(int width) {
-        dragArea = (SurfaceView) findViewById(R.id.dragArea);
         dragArea.getHolder().setFixedSize(width, width);
     }
 
@@ -81,115 +163,26 @@ public class Game extends ActionBarActivity {
         //TODO
     }
 
-
+    // When START is clicked, start game.
     public void onButtonClick(View v) {
         gameRunning = true;
     }
 
-    // "View" is the draggable box.
-//    View myView = findViewById(R.id.my_view);
-//    myView.setOnTouchListener(new OnTouchListener() {
-//        public boolean onTouch(View v, MotionEvent event) {
-//            // ... Respond to touch events
-//            return true;
-//        }
-//    });
-
-    /*
-     * Called when the user touches the screen.
-     */
-    public boolean onTouchEvent(MotionEvent swipe){
-        // start button has not been pressed
-        if (!gameRunning) { return false; }
-
-        countTV = (TextView) findViewById(R.id.count);
-
-        switch (swipe.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x_start = swipe.getX();
-                y_start = y_min = y_max = swipe.getY();
-                swipeDirection = "";
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-
-                // if user has not already changed direction.
-                if (!crossedNS) {
-
-                    // set the initial direction of the drag.
-                    if (swipe.getY() > y_start) {
-                        swipeDirection = DOWN;
-                    } else if (swipe.getY() < y_start) {
-                        swipeDirection = UP;
-                    }
-
-                    // if the drag is going down and the current y value is higher than
-                    // the lowest recorded value of y, then the direction has changed.
-                    if (swipeDirection.equals(DOWN)) {
-                        if (swipe.getY() <= y_max) {
-                            crossedNS = true;
-                        } else {
-                            y_max = swipe.getY(); // Update y_max with current value.
-                        }
-
-                    // The same as above but with the initial drag direction going up.
-                    } else if (swipeDirection.equals(UP)) {
-                        if (swipe.getY() >= y_min) {
-                            crossedNS = true;
-                        } else {
-                            y_min = swipe.getY(); // Update y_min with current value.
-                        }
-                    }
-
-                    // If the north-south divide has been crossed the drag ends.
-                    if (crossedNS = true) {
-                        x_end = swipe.getX();
-                        y_end = swipe.getY();
-                        if (isLegalDrag()) {
-                            numSwipes += 1;
-                        }
-                    }
-                }
-                debugText(swipe);
-                break;
-
-            case MotionEvent.ACTION_UP:
-                if (!crossedNS) {
-                    x_end = swipe.getX();
-                    y_end = swipe.getY();
-                    if ((isLegalDrag())) {
-                        numSwipes += 1;
-                    }
-                    crossedNS = false;
-                }
-                debugText(swipe);
-                break;
-        }
-        countTV.setText(Integer.toString(numSwipes));
-        return false;
-    }
-
-    // Finds gradient. If angle between drag and vertical line is <15degrees, drag is legal.
-    private boolean isLegalDrag() {
-        if ((y_start == y_end) || (x_start == x_end)) { return false; }
-
-        return Math.abs((y_end - y_start) / (x_end - x_start)) >= 3.73205; // 15 degrees from vertical
-    }
-
     // Prints stats to screen for debugging purposes
-    private void debugText(MotionEvent swipe) {
+    private void debugText(MotionEvent swipe, String action) {
         debugText = (TextView) findViewById(R.id.debugText);
         debugText.setText(
-            "x1: " + String.format("%.2f", x_start) +
-            " x2: " + String.format("%.2f", x_end) +
-            " y1: " + String.format("%.2f", y_start) +
-            " y2: " + String.format("%.2f", y_end) +
-            " yMin: " + String.format("%.2f", y_min) +
-            " yMax: " + String.format("%.2f", y_max) +
-            " grad: " + String.format("%.2f", Math.abs((y_end - y_start) / (x_end - x_start))) +
-            " y: " + String.format("%.2f", swipe.getY()) +
-            " Swipe Direction: " + swipeDirection +
-            " crossedNS: " + Boolean.toString(crossedNS)
+            action +
+            "\nx_start: " + String.format("%.2f", x_start) +
+            "\nx_end: " + String.format("%.2f", x_end) +
+            "\ny_start: " + String.format("%.2f", y_start) +
+            "\ny_end: " + String.format("%.2f", y_end) +
+            "\nyMin: " + String.format("%.2f", y_min) +
+            "\nyMax: " + String.format("%.2f", y_max) +
+            "\ngrad: " + String.format("%.2f", Math.abs((y_end - y_start) / (x_end - x_start))) +
+            "\ny: " + String.format("%.2f", swipe.getY()) +
+            "\nSwipe Direction: " + swipeDirection +
+            "\ncrossedNS: " + Boolean.toString(crossedNS)
         );
     }
 

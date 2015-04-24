@@ -38,11 +38,10 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
+        android:id="@+id/debugText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/debugText"
-        android:layout_above="@+id/count"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
