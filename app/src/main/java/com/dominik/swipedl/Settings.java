@@ -17,7 +17,7 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     SharedPreferences sharedPrefs;
 
     private int numPlayers;
-    private boolean timeLimit;
+    private int gameMode;
     private int gameModeOption;
     private int difficulty;
 
@@ -41,7 +41,7 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
 
         sharedPrefs = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         numPlayers = sharedPrefs.getInt("numPlayers", 1);
-        timeLimit = sharedPrefs.getBoolean("timeLimit", true);
+        gameMode = sharedPrefs.getInt("gameMode", 1);
         gameModeOption = sharedPrefs.getInt("gameModeOption", 3);
         difficulty = sharedPrefs.getInt("difficulty", 1);
 
@@ -104,24 +104,24 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
                 break;
 
             case R.id.GameModeOptionOne:
-                if (timeLimit) {
-                    seconds10Selected();
+                if (gameMode == 1) {
+                    seconds5Selected();
                 } else {
                     drags10Selected();
                 }
                 break;
 
             case R.id.GameModeOptionTwo:
-                if (timeLimit) {
-                    seconds30Selected();
+                if (gameMode == 1) {
+                    seconds10Selected();
                 } else {
                     drags50Selected();
                 }
                 break;
 
             case R.id.GameModeOptionThree:
-                if (timeLimit) {
-                    seconds60Selected();
+                if (gameMode == 1) {
+                    seconds30Selected();
                 } else {
                     drags100Selected();
                 }
@@ -154,17 +154,12 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     private void onePlayerSelected() { numPlayers = 1; }
     private void twoPlayersSelected() { numPlayers = 2; }
 
-    private void timeLimitSelected() {
-        timeLimit = true;
-    }
+    private void timeLimitSelected() { gameMode = 1; }
+    private void dragLimitSelected() { gameMode = 2; }
 
-    private void dragLimitSelected() {
-        timeLimit = false;
-    }
-
-    private void seconds10Selected() { gameModeOption = 1; }
-    private void seconds30Selected() { gameModeOption = 2; }
-    private void seconds60Selected() { gameModeOption = 3; }
+    private void seconds5Selected() { gameModeOption = 1; }
+    private void seconds10Selected() { gameModeOption = 2; }
+    private void seconds30Selected() { gameModeOption = 3; }
 
     private void drags10Selected() { gameModeOption = 1; }
     private void drags50Selected() { gameModeOption = 2; }
@@ -189,11 +184,11 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
             selectedNumPlayers = two_player_button;
         }
 
-        if (timeLimit) {
+        if (gameMode == 1) {
             selectedTimeLimit = time_limit_button;
-            game_mode_option_one_button.setText(getString(R.string.ten_seconds));
-            game_mode_option_two_button.setText(getString(R.string.thirty_seconds));
-            game_mode_option_three_button.setText(getString(R.string.sixty_seconds));
+            game_mode_option_one_button.setText(getString(R.string.five_seconds));
+            game_mode_option_two_button.setText(getString(R.string.ten_seconds));
+            game_mode_option_three_button.setText(getString(R.string.thirty_seconds));
 
         } else {
             selectedTimeLimit = drag_limit_button;
@@ -245,7 +240,7 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         SharedPreferences.Editor editor = sharedPrefs.edit();
 
         editor.putInt("numPlayers", numPlayers);
-        editor.putBoolean("timeLimit", timeLimit);
+        editor.putInt("GameMode", gameMode);
         editor.putInt("gameModeOption", gameModeOption);
         editor.putInt("difficulty", difficulty);
 
@@ -254,9 +249,7 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         returnHome();
     }
 
-    private void cancelSelected() {
-        returnHome();
-    }
+    private void cancelSelected() { returnHome(); }
 
     private void returnHome() {
         Intent returnHome = new Intent(this, TopMenu.class);

@@ -19,9 +19,9 @@
     <string name="easy">Easy</string>
     <string name="medium">Medium</string>
     <string name="hard">Hard</string>
+    <string name="five_seconds">5s</string>
     <string name="ten_seconds">10s</string>
     <string name="thirty_seconds">30s</string>
-    <string name="sixty_seconds">60s</string>
     <string name="ten_drags">10 drags</string>
     <string name="fifty_drags">50 drags</string>
     <string name="hundred_drags">100 drags</string>

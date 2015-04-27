@@ -27,7 +27,6 @@
         android:layout_below="@+id/HighScores"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
         android:clickable="true"
         android:textAllCaps="false" />
 
@@ -51,11 +50,41 @@
         android:clickable="true"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/Easy"
+        android:text="Easy"
+        android:layout_below="@+id/Individual"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Moderate"
+        android:text="Moderate"
+        android:layout_below="@+id/Group"
+        android:layout_toRightOf="@+id/Individual"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/Hard"
+        android:text="Hard"
+        android:layout_below="@+id/World"
+        android:layout_toRightOf="@+id/Moderate"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textAllCaps="false" />
+
     <LinearLayout
         android:id="@+id/SelectGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Individual"
+        android:layout_below="@+id/Easy"
         android:layout_alignLeft="@id/Individual"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="-30dp"
@@ -77,11 +106,19 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/Best5s"
+        android:text="Best 5s score:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SelectGroup"
+        android:layout_alignLeft="@id/SelectGroup" />
+
+    <TextView
         android:id="@+id/Best10s"
         android:text="Best 10s score:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/SelectGroup"
+        android:layout_below="@+id/Best5s"
         android:layout_alignLeft="@id/SelectGroup" />
 
     <TextView
@@ -93,19 +130,11 @@
         android:layout_alignLeft="@id/SelectGroup" />
 
     <TextView
-        android:id="@+id/Best60s"
-        android:text="Best 60s score:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best30s"
-        android:layout_alignLeft="@id/SelectGroup" />
-
-    <TextView
         android:id="@+id/Best10drags"
         android:text="Best 10 drags time:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Best60s"
+        android:layout_below="@+id/Best30s"
         android:layout_marginTop="10dp"
         android:layout_alignLeft="@id/SelectGroup" />
 
@@ -126,11 +155,19 @@
         android:layout_alignLeft="@id/SelectGroup" />
 
     <TextView
-        android:id="@+id/Best10sValue"
+        android:id="@+id/Best5sValue"
         android:text="@string/zero"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/SelectGroup"
+        android:layout_alignLeft="@id/World" />
+
+    <TextView
+        android:id="@+id/Best10sValue"
+        android:text="@string/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best5s"
         android:layout_alignLeft="@id/World" />
 
     <TextView
@@ -142,19 +179,11 @@
         android:layout_alignLeft="@id/World" />
 
     <TextView
-        android:id="@+id/Best60sValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best30s"
-        android:layout_alignLeft="@id/World" />
-
-    <TextView
         android:id="@+id/Best10dragsValue"
         android:text="@string/zero"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Best60s"
+        android:layout_below="@+id/Best30s"
         android:layout_marginTop="10dp"
         android:layout_alignLeft="@id/World" />
 
@@ -175,19 +204,27 @@
         android:layout_alignLeft="@id/World" />
 
     <TextView
-        android:text="@string/seconds"
+        android:text="@string/drags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/SelectGroup"
+        android:layout_toRightOf="@id/Best5sValue"
+        android:layout_marginLeft="3dp" />
+
+    <TextView
+        android:text="@string/drags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Best5s"
         android:layout_toRightOf="@id/Best10sValue"
         android:layout_marginLeft="3dp" />
 
     <TextView
-        android:text="@string/seconds"
+        android:text="@string/drags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Best10s"
-        android:layout_toRightOf="@id/Best10sValue"
+        android:layout_toRightOf="@id/Best30sValue"
         android:layout_marginLeft="3dp" />
 
     <TextView
@@ -195,20 +232,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Best30s"
-        android:layout_toRightOf="@id/Best10sValue"
-        android:layout_marginLeft="3dp" />
-
-    <TextView
-        android:text="@string/drags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best60s"
-        android:layout_toRightOf="@id/Best60sValue"
+        android:layout_toRightOf="@id/Best10dragsValue"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="3dp" />
 
     <TextView
-        android:text="@string/drags"
+        android:text="@string/seconds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Best10dragsValue"
@@ -216,7 +245,7 @@
         android:layout_marginLeft="3dp" />
 
     <TextView
-        android:text="@string/drags"
+        android:text="@string/seconds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Best50dragsValue"
