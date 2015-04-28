@@ -205,32 +205,6 @@ public class Game extends ActionBarActivity {
         });
     }
 
-    // The player has reached the total amount of drags required.
-    private void dragLimitReached() {
-        timerHandler.removeCallbacks(timerRunnable);
-        gameState = GameState.OFF;
-
-        int minutes = (int) (millisSinceStart / 60000);
-        int seconds = (int) ((millisSinceStart / 1000) % 60);
-        int millis = (int) millisSinceStart % 1000;
-
-        String result;
-        boolean isHighScore = false;
-        if (minutes > 0) {
-            result = String.format("You made %d drags in%2d:%2d.%03ds", numSwipes, minutes, seconds, millis);
-        } else {
-            result = String.format("You made %d drags in%2d.%03ds", numSwipes, seconds, millis);
-        }
-
-        if (newHighScore(millisSinceStart)) {
-            isHighScore = true;
-        }
-
-        displayToastResult(result, isHighScore);
-
-        startButton.setVisibility(View.VISIBLE);
-    }
-
     // Start button clicked.
     public void onStartButtonClick(View v) {
         gameState = GameState.ON;
@@ -247,6 +221,31 @@ public class Game extends ActionBarActivity {
         }
 
         startButton.setVisibility(View.INVISIBLE);
+    }
+
+    // Pauses the game clock.
+    public void onPauseClick(View v) {
+        switch (gameState) {
+            case ON:
+                if (gameMode == 1) {
+                    countDownTimer.cancel();
+                } else {
+                    timerHandler.removeCallbacks(timerRunnable);
+                }
+                gameState = GameState.PAUSED;
+                break;
+
+            case PAUSED:
+                if (gameMode == 1) {
+                    countDownTimer = new GameCountDownTimer(timeRemaining, 10);
+                    countDownTimer.start();
+                } else {
+                    startTime = System.currentTimeMillis() - millisSinceStart;
+                    timerHandler.postDelayed(timerRunnable, 0);
+                }
+                gameState = GameState.ON;
+                break;
+        }
     }
 
     // Finds gradient. If angle between drag and vertical line is <15degrees, drag is legal.
@@ -286,35 +285,35 @@ public class Game extends ActionBarActivity {
         dragArea.getHolder().setFixedSize(width, width);
     }
 
-    // Pauses the game clock.
-    public void onPauseClick(View v) {
+    // The player has reached the total amount of drags required.
+    // DRAG limit only
+    private void dragLimitReached() {
+        timerHandler.removeCallbacks(timerRunnable);
+        gameState = GameState.OFF;
 
-        switch (gameState) {
-            case ON:
-                if (gameMode == 1) {
-                    countDownTimer.cancel();
-                } else {
-                    timerHandler.removeCallbacks(timerRunnable);
-                }
-                gameState = GameState.PAUSED;
-                break;
+        int minutes = (int) (millisSinceStart / 60000);
+        int seconds = (int) ((millisSinceStart / 1000) % 60);
+        int millis = (int) millisSinceStart % 1000;
 
-            case PAUSED:
-                if (gameMode == 1) {
-                    countDownTimer = new GameCountDownTimer(timeRemaining, 10);
-                    countDownTimer.start();
-                } else {
-                    startTime = System.currentTimeMillis() - millisSinceStart;
-                    timerHandler.postDelayed(timerRunnable, 0);
-                }
-                gameState = GameState.ON;
-                break;
+        String result;
+        boolean isHighScore = false;
+        if (minutes > 0) {
+            result = String.format("You made %d drags in%2d:%2d.%03ds", numSwipes, minutes, seconds, millis);
+        } else {
+            result = String.format("You made %d drags in%2d.%03ds", numSwipes, seconds, millis);
         }
+
+        if (newHighScore(millisSinceStart)) {
+            isHighScore = true;
+        }
+
+        displayToastResult(result, isHighScore);
+
+        startButton.setVisibility(View.VISIBLE);
     }
 
-    // Checks to see if the score recorded is a high score.
-    // If so, update the high scores page.
-    // TIME Limit Games.
+    // If the score recorded is a high score, update the high scores page.
+    // TIME Limit games only.
     private boolean newHighScore(int score) {
         sharedPrefs = getSharedPreferences("High Scores", Context.MODE_PRIVATE);
         String gameType = "individualEasy30s"; // default
@@ -358,22 +357,9 @@ public class Game extends ActionBarActivity {
         return false;
     }
 
-    // Displays final score for the player.
-    private void displayToastResult(String result, boolean isHighScore) {
-        if (isHighScore) {
-            Toast toastHighScore = Toast.makeText(getApplicationContext(), "New High Score!", Toast.LENGTH_LONG);
-            toastHighScore.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
-            toastHighScore.show();
-        }
-
-        Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
-        toast.show();
-    }
-
-    // Checks to see if the score recorded is a high score.
-    // If so, update the high scores page.
+    // If the score recorded is a high score, update the high scores page.
     // DRAG Limit games only.
+    // TODO group/world high score check.
     private boolean newHighScore(float millisSinceStart) {
         sharedPrefs = getSharedPreferences("High Scores", Context.MODE_PRIVATE);
         String gameType = "individualEasy30s"; // default
@@ -417,21 +403,34 @@ public class Game extends ActionBarActivity {
         return false;
     }
 
+    // Displays final result.
+    private void displayToastResult(String result, boolean isHighScore) {
+        if (isHighScore) {
+            Toast toastHighScore = Toast.makeText(getApplicationContext(), "New High Score!", Toast.LENGTH_LONG);
+            toastHighScore.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
+            toastHighScore.show();
+        }
+
+        Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
+        toast.show();
+    }
+
     // Prints stats to screen for debugging purposes
     private void debugText(MotionEvent swipe, String action) {
         debugText = (TextView) findViewById(R.id.debugText);
         debugText.setText(
                 action +
-                        "\nx_start: " + String.format("%.2f", x_start) +
-                        "\nx_end: " + String.format("%.2f", x_end) +
-                        "\ny_start: " + String.format("%.2f", y_start) +
-                        "\ny_end: " + String.format("%.2f", y_end) +
-                        "\nyMin: " + String.format("%.2f", y_min) +
-                        "\nyMax: " + String.format("%.2f", y_max) +
-                        "\ngrad: " + String.format("%.2f", Math.abs((y_end - y_start) / (x_end - x_start))) +
-                        "\ny: " + String.format("%.2f", swipe.getY()) +
-                        "\nSwipe Direction: " + swipeDirection +
-                        "\ncrossedNS: " + Boolean.toString(crossedNS)
+                "\nx_start: " + String.format("%.2f", x_start) +
+                "\nx_end: " + String.format("%.2f", x_end) +
+                "\ny_start: " + String.format("%.2f", y_start) +
+                "\ny_end: " + String.format("%.2f", y_end) +
+                "\nyMin: " + String.format("%.2f", y_min) +
+                "\nyMax: " + String.format("%.2f", y_max) +
+                "\ngrad: " + String.format("%.2f", Math.abs((y_end - y_start) / (x_end - x_start))) +
+                "\ny: " + String.format("%.2f", swipe.getY()) +
+                "\nSwipe Direction: " + swipeDirection +
+                "\ncrossedNS: " + Boolean.toString(crossedNS)
         );
     }
 
