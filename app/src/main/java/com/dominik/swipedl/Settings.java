@@ -88,55 +88,55 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.OnePlayer:
-                onePlayerSelected();
+                numPlayers = 1;
                 break;
 
             case R.id.TwoPlayer:
-                twoPlayersSelected();
+                numPlayers = 2;
                 break;
 
             case R.id.TimeLimit:
-                timeLimitSelected();
+                gameMode = 1;
                 break;
 
             case R.id.DragLimit:
-                dragLimitSelected();
+                gameMode = 2;
                 break;
 
             case R.id.GameModeOptionOne:
                 if (gameMode == 1) {
-                    seconds5Selected();
+                    gameModeOption = 1;
                 } else {
-                    drags10Selected();
+                    gameModeOption = 1;
                 }
                 break;
 
             case R.id.GameModeOptionTwo:
                 if (gameMode == 1) {
-                    seconds10Selected();
+                    gameModeOption = 2;
                 } else {
-                    drags50Selected();
+                    gameModeOption = 2;
                 }
                 break;
 
             case R.id.GameModeOptionThree:
                 if (gameMode == 1) {
-                    seconds30Selected();
+                    gameModeOption = 3;
                 } else {
-                    drags100Selected();
+                    gameModeOption = 3;
                 }
                 break;
 
             case R.id.Easy:
-                easySelected();
+                difficulty = 1;
                 break;
 
             case R.id.Medium:
-                mediumSelected();
+                difficulty = 2;
                 break;
 
             case R.id.Hard:
-                hardSelected();
+                difficulty = 3;
                 break;
 
             case R.id.Save:
@@ -151,27 +151,11 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         updateButtonState();
     }
 
-    private void onePlayerSelected() { numPlayers = 1; }
-    private void twoPlayersSelected() { numPlayers = 2; }
-
-    private void timeLimitSelected() { gameMode = 1; }
-    private void dragLimitSelected() { gameMode = 2; }
-
-    private void seconds5Selected() { gameModeOption = 1; }
-    private void seconds10Selected() { gameModeOption = 2; }
-    private void seconds30Selected() { gameModeOption = 3; }
-
-    private void drags10Selected() { gameModeOption = 1; }
-    private void drags50Selected() { gameModeOption = 2; }
-    private void drags100Selected() { gameModeOption = 3; }
-
-    private void easySelected() { difficulty = 1; }
-    private void mediumSelected() { difficulty = 2; }
-    private void hardSelected() { difficulty = 3; }
-
     // Button selected ? button colour = green : button colour = grey
     private void updateButtonState() {
 
+        // The following buttons are aliased to the currently selected buttons.
+        // These buttons are given a different background colour to indicate selection.
         Button selectedNumPlayers;
         Button selectedTimeLimit;
         Button selectedGameModeOption;
@@ -179,7 +163,6 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
 
         if (numPlayers == 1) {
             selectedNumPlayers= one_player_button;
-
         } else {
             selectedNumPlayers = two_player_button;
         }
@@ -234,13 +217,14 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         selectedDifficulty.setBackgroundColor(Color.GREEN);
     }
 
+    // Save to SharedPreferences. The selected settings will be used for the next game.
     private void saveSelected() {
 
         sharedPrefs = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
 
         editor.putInt("numPlayers", numPlayers);
-        editor.putInt("GameMode", gameMode);
+        editor.putInt("gameMode", gameMode);
         editor.putInt("gameModeOption", gameModeOption);
         editor.putInt("difficulty", difficulty);
 

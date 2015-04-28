@@ -24,51 +24,50 @@ import static android.view.View.*;
 
 public class HighScores extends ActionBarActivity implements AdapterView.OnItemSelectedListener, OnClickListener {
 
-    private TextView SelectGroupText;
-    private Spinner spinner;
-    private User thisUser;
-
-    private Button individual_button;
-    private Button group_button;
-    private Button world_button;
-    private Button easy_button;
-    private Button moderate_button;
-    private Button hard_button;
-
-    private String regionType;
-    private String difficulty;
-
-    // High scores stored in shared preferences
-    SharedPreferences sharedPrefs;
-
+    // UI controls
+    TextView SelectGroupText;
+    Spinner spinner;
     TextView highScore5s;
     TextView highScore10s;
     TextView highScore30s;
     TextView highScore10d;
     TextView highScore50d;
     TextView highScore100d;
+    Button individual_button;
+    Button group_button;
+    Button world_button;
+    Button easy_button;
+    Button moderate_button;
+    Button hard_button;
 
-    // All possible individual high scores
+    private User thisUser;
+    private String regionType;
+    private String difficulty;
+
+    // High scores stored in shared preferences
+    SharedPreferences sharedPrefs;
+
+    // All possible INDIVIDUAL high scores
     int individualEasy5s, individualEasy10s, individualEasy30s;
-    int individualEasy10d, individualEasy50d, individualEasy100d;
+    float individualEasy10d, individualEasy50d, individualEasy100d;
     int individualModerate5s, individualModerate10s, individualModerate30s;
-    int individualModerate10d, individualModerate50d, individualModerate100d;
+    float individualModerate10d, individualModerate50d, individualModerate100d;
     int individualHard5s, individualHard10s, individualHard30s;
-    int individualHard10d, individualHard50d, individualHard100d;
+    float individualHard10d, individualHard50d, individualHard100d;
 
     int groupEasy5s, groupEasy10s, groupEasy30s;
-    int groupEasy10d, groupEasy50d, groupEasy100d;
+    float groupEasy10d, groupEasy50d, groupEasy100d;
     int groupModerate5s, groupModerate10s, groupModerate30s;
-    int groupModerate10d, groupModerate50d, groupModerate100d;
+    float groupModerate10d, groupModerate50d, groupModerate100d;
     int groupHard5s, groupHard10s, groupHard30s;
-    int groupHard10d, groupHard50d, groupHard100d;
+    float groupHard10d, groupHard50d, groupHard100d;
 
     int worldEasy5s, worldEasy10s, worldEasy30s;
-    int worldEasy10d, worldEasy50d, worldEasy100d;
+    float worldEasy10d, worldEasy50d, worldEasy100d;
     int worldModerate5s, worldModerate10s, worldModerate30s;
-    int worldModerate10d, worldModerate50d, worldModerate100d;
+    float worldModerate10d, worldModerate50d, worldModerate100d;
     int worldHard5s, worldHard10s, worldHard30s;
-    int worldHard10d, worldHard50d, worldHard100d;
+    float worldHard10d, worldHard50d, worldHard100d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,32 +132,31 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
         difficulty = "Easy";
 
         getHighScores();
-        individualSelected();
+        individualSelected(); // Default selection
         updateHighScores();
     }
 
-    // Gets high scored from SharedPreferences (Individual), or database (Group, World)
-
+    // Gets high scores from SharedPreferences (Individual), or database (Group, World)
     private void getHighScores() {
         sharedPrefs = getSharedPreferences("High Scores", Context.MODE_PRIVATE);
         individualEasy5s = sharedPrefs.getInt("individualEasy5s", 0);
         individualEasy10s = sharedPrefs.getInt("individualEasy10s", 0);
         individualEasy30s = sharedPrefs.getInt("individualEasy30s", 0);
-        individualEasy10d = sharedPrefs.getInt("individualEasy10d", 0);
-        individualEasy50d = sharedPrefs.getInt("individualEasy50d", 0);
-        individualEasy100d = sharedPrefs.getInt("individualEasy100d", 0);
+        individualEasy10d = sharedPrefs.getFloat("individualEasy10d", 0) / 1000;
+        individualEasy50d = sharedPrefs.getFloat("individualEasy50d", 0) / 1000;
+        individualEasy100d = sharedPrefs.getFloat("individualEasy100d", 0) / 1000;
         individualModerate5s = sharedPrefs.getInt("individualModerate5s", 0);
         individualModerate10s = sharedPrefs.getInt("individualModerate10s", 0);
         individualModerate30s = sharedPrefs.getInt("individualModerate30s", 0);
-        individualModerate10d = sharedPrefs.getInt("individualModerate10d", 0);
-        individualModerate50d = sharedPrefs.getInt("individualModerate50d", 0);
-        individualModerate100d = sharedPrefs.getInt("individualModerate100d", 0);
+        individualModerate10d = sharedPrefs.getFloat("individualModerate10d", 0) / 1000;
+        individualModerate50d = sharedPrefs.getFloat("individualModerate50d", 0) / 1000;
+        individualModerate100d = sharedPrefs.getFloat("individualModerate100d", 0) / 1000;
         individualHard5s = sharedPrefs.getInt("individualHard5s", 0);
         individualHard10s = sharedPrefs.getInt("individualHard10s", 0);
         individualHard30s = sharedPrefs.getInt("individualHard30s", 0);
-        individualHard10d = sharedPrefs.getInt("individualHard10d", 0);
-        individualHard50d = sharedPrefs.getInt("individualHard50d", 0);
-        individualHard100d = sharedPrefs.getInt("individualHard100d", 0);
+        individualHard10d = sharedPrefs.getFloat("individualHard10d", 0) / 1000;
+        individualHard50d = sharedPrefs.getFloat("individualHard50d", 0) / 1000;
+        individualHard100d = sharedPrefs.getFloat("individualHard100d", 0) / 1000;
 
         // TODO need database to get group high scores.
         groupEasy5s = 0;
@@ -231,8 +229,8 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
         updateHighScores();
     }
 
-    // Updates the colour of the buttons and populates the table
-    // with the correct high scores for the selected buttons.
+    // Updates the colour of the buttons and populates the
+    // correct high scores for the selected buttons.
     private void updateHighScores() {
 
         Button locality_button;
@@ -274,7 +272,7 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
         locality_button.setBackgroundColor(Color.GREEN);
         difficulty_button.setBackgroundColor(Color.GREEN);
 
-        // Get the high scores
+        // Set the high scores into the TextView
         switch (regionType) {
             case "Individual":
             default:
@@ -284,27 +282,27 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
                         highScore5s.setText(Integer.toString(individualEasy5s));
                         highScore10s.setText(Integer.toString(individualEasy10s));
                         highScore30s.setText(Integer.toString(individualEasy30s));
-                        highScore10d.setText(Integer.toString(individualEasy10d));
-                        highScore50d.setText(Integer.toString(individualEasy50d));
-                        highScore100d.setText(Integer.toString(individualEasy100d));
+                        highScore10d.setText(Float.toString(individualEasy10d));
+                        highScore50d.setText(Float.toString(individualEasy50d));
+                        highScore100d.setText(Float.toString(individualEasy100d));
                         break;
 
                     case "Moderate":
                         highScore5s.setText(Integer.toString(individualModerate5s));
                         highScore10s.setText(Integer.toString(individualModerate10s));
                         highScore30s.setText(Integer.toString(individualModerate30s));
-                        highScore10d.setText(Integer.toString(individualModerate10d));
-                        highScore50d.setText(Integer.toString(individualModerate50d));
-                        highScore100d.setText(Integer.toString(individualModerate100d));
+                        highScore10d.setText(Float.toString(individualModerate10d));
+                        highScore50d.setText(Float.toString(individualModerate50d));
+                        highScore100d.setText(Float.toString(individualModerate100d));
                         break;
 
                     case "Hard":
                         highScore5s.setText(Integer.toString(individualHard5s));
                         highScore10s.setText(Integer.toString(individualHard10s));
                         highScore30s.setText(Integer.toString(individualHard30s));
-                        highScore10d.setText(Integer.toString(individualHard10d));
-                        highScore50d.setText(Integer.toString(individualHard50d));
-                        highScore100d.setText(Integer.toString(individualHard100d));
+                        highScore10d.setText(Float.toString(individualHard10d));
+                        highScore50d.setText(Float.toString(individualHard50d));
+                        highScore100d.setText(Float.toString(individualHard100d));
                         break;
                 }
             break;
@@ -315,27 +313,27 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
                         highScore5s.setText(Integer.toString(groupEasy5s));
                         highScore10s.setText(Integer.toString(groupEasy10s));
                         highScore30s.setText(Integer.toString(groupEasy30s));
-                        highScore10d.setText(Integer.toString(groupEasy10d));
-                        highScore50d.setText(Integer.toString(groupEasy50d));
-                        highScore100d.setText(Integer.toString(groupEasy100d));
+                        highScore10d.setText(Float.toString(groupEasy10d));
+                        highScore50d.setText(Float.toString(groupEasy50d));
+                        highScore100d.setText(Float.toString(groupEasy100d));
                         break;
 
                     case "Moderate":
                         highScore5s.setText(Integer.toString(groupModerate5s));
                         highScore10s.setText(Integer.toString(groupModerate10s));
                         highScore30s.setText(Integer.toString(groupModerate30s));
-                        highScore10d.setText(Integer.toString(groupModerate10d));
-                        highScore50d.setText(Integer.toString(groupModerate50d));
-                        highScore100d.setText(Integer.toString(groupModerate100d));
+                        highScore10d.setText(Float.toString(groupModerate10d));
+                        highScore50d.setText(Float.toString(groupModerate50d));
+                        highScore100d.setText(Float.toString(groupModerate100d));
                         break;
 
                     case "Hard":
                         highScore5s.setText(Integer.toString(groupHard5s));
                         highScore10s.setText(Integer.toString(groupHard10s));
                         highScore30s.setText(Integer.toString(groupHard30s));
-                        highScore10d.setText(Integer.toString(groupHard10d));
-                        highScore50d.setText(Integer.toString(groupHard50d));
-                        highScore100d.setText(Integer.toString(groupHard100d));
+                        highScore10d.setText(Float.toString(groupHard10d));
+                        highScore50d.setText(Float.toString(groupHard50d));
+                        highScore100d.setText(Float.toString(groupHard100d));
                         break;
                 }
             break;
@@ -347,27 +345,27 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
                         highScore5s.setText(Integer.toString(worldEasy5s));
                         highScore10s.setText(Integer.toString(worldEasy10s));
                         highScore30s.setText(Integer.toString(worldEasy30s));
-                        highScore10d.setText(Integer.toString(worldEasy10d));
-                        highScore50d.setText(Integer.toString(worldEasy50d));
-                        highScore100d.setText(Integer.toString(worldEasy100d));
+                        highScore10d.setText(Float.toString(worldEasy10d));
+                        highScore50d.setText(Float.toString(worldEasy50d));
+                        highScore100d.setText(Float.toString(worldEasy100d));
                         break;
 
                     case "Moderate":
                         highScore5s.setText(Integer.toString(worldModerate5s));
                         highScore10s.setText(Integer.toString(worldModerate10s));
                         highScore30s.setText(Integer.toString(worldModerate30s));
-                        highScore10d.setText(Integer.toString(worldModerate10d));
-                        highScore50d.setText(Integer.toString(worldModerate50d));
-                        highScore100d.setText(Integer.toString(worldModerate100d));
+                        highScore10d.setText(Float.toString(worldModerate10d));
+                        highScore50d.setText(Float.toString(worldModerate50d));
+                        highScore100d.setText(Float.toString(worldModerate100d));
                         break;
 
                     case "Hard":
                         highScore5s.setText(Integer.toString(worldHard5s));
                         highScore10s.setText(Integer.toString(worldHard10s));
                         highScore30s.setText(Integer.toString(worldHard30s));
-                        highScore10d.setText(Integer.toString(worldHard10d));
-                        highScore50d.setText(Integer.toString(worldHard50d));
-                        highScore100d.setText(Integer.toString(worldHard100d));
+                        highScore10d.setText(Float.toString(worldHard10d));
+                        highScore50d.setText(Float.toString(worldHard50d));
+                        highScore100d.setText(Float.toString(worldHard100d));
                         break;
                 }
             break;

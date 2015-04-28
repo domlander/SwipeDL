@@ -28,11 +28,19 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="title_activity_high_scores">HighScores</string>
-    <string name="hello_world">Hello world!</string>
     <string name="zero">0</string>
     <string name="select_group">Select Group:</string>
     <string name="title_activity_instructions">Instructions</string>
     <string name="seconds">seconds</string>
     <string name="drags">drags</string>
     <string name="pause">| |</string>
+    <string name="instructions_subheading_1">How to Play</string>
+    <string name="instructions_subheading_2">Objective</string>
+    <string name="instructions_subheading_3">Drag Area</string>
+    <string name="instructions_text_1">You register a drag by placing a finger on the screen, moving it across the screen in an
+    up or down direction, and releasing it from the screen.</string>
+    <string name="instructions_text_2">The aim is to either register as many drags as possible in a certain time, or to
+    complete the target number of drags as fast as possible.</string>
+    <string name="instructions_text_3">The area in which drags are recorded is the off colour box in the center of the screen. Finger
+    drags are only recorded within this area.</string>
 </resources>

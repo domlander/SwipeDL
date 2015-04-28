@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -14,30 +16,32 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//TODO Change gameMode and gameOption to one gameMode = {t5, t10, t30, d10, d50, d100}
+
 public class Game extends ActionBarActivity {
 
     TextView dragCount;
-    public TextView timerValue;
+    TextView timerValue;
     SurfaceView dragArea;
     TextView debugText;
     Button startButton;
     Button pauseButton;
 
-    private boolean gameRunning = false;
+    private GameState gameState;
     private int numSwipes = 0;
     private final String UP = "UP";
     private final String DOWN = "DOWN";
 
-    String swipeDirection;
-    boolean crossedNS; // if true, the user has changed swipe directions.
+    private String swipeDirection;
+    private boolean crossedNS; // if true, the user has changed swipe directions.
 
     // Registers the co-ordinates of the user touching the screen and releasing.
-    double x_start, x_end;
-    double y_start, y_end;
-    double y_min, y_max;
+    private double x_start, x_end;
+    private double y_start, y_end;
+    private double y_min, y_max;
 
-    int gameTime;
-    int dragLimit;
+    private int gameTime;
+    private int dragLimit;
 
     // Shared Preferences
     SharedPreferences sharedPrefs;
@@ -46,14 +50,39 @@ public class Game extends ActionBarActivity {
     int gameModeOption;
     int difficulty;
 
-    GameTimer countDownTimer;
-    long timeRemaining;
+    private long timeRemaining;
+
+    GameCountDownTimer countDownTimer;
+
+    // For standard timer in drag limit games.
+    long startTime = 0;
+    long millisSinceStart;
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            millisSinceStart = System.currentTimeMillis() - startTime;
+            int minutes = (int) (millisSinceStart / 60000);
+            int seconds = (int) ((millisSinceStart / 1000) % 60);
+            int millis = (int) millisSinceStart % 1000;
+
+            if (minutes > 0) {
+                timerValue.setText(String.format("%2d:%2d.%03d", minutes, seconds, millis));
+            } else {
+                timerValue.setText(String.format("%2d.%03ds", seconds, millis));
+            }
+            timerHandler.postDelayed(this, 0);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
+        gameState = GameState.OFF;
+
+        // UI
         dragCount = (TextView) findViewById(R.id.count);
         startButton = (Button) findViewById(R.id.startButton);
         pauseButton = (Button) findViewById(R.id.pauseButton);
@@ -66,39 +95,45 @@ public class Game extends ActionBarActivity {
         gameModeOption = sharedPrefs.getInt("gameModeOption", 3);
         difficulty = sharedPrefs.getInt("difficulty", 1);
 
-        // time limit
-        if (gameMode == 1) {
+        // Set game type variable
+        switch (gameMode) {
+            case 1: // time limit
+                switch (gameModeOption) {
+                    case 1: // 5 seconds
+                        gameTime = 5000;
+                        break;
+                    case 2: // 10 seconds
+                        gameTime = 10000;
+                        break;
+                    case 3: // 30 seconds
+                        gameTime = 30000;
+                        break;
+                }
+            break;
 
-            if (gameModeOption == 1) { // 5 seconds
-                gameTime = 5000;
-
-            } else if (gameModeOption == 2) { // 10 seconds
-                gameTime = 10000;
-
-            } else { // 30 seconds
-                gameTime = 30000;
-            }
-
-        // drag total
-        } else {
-            if (gameModeOption == 1) { // 10 drags
-                dragLimit = 10;
-
-            } else if (gameModeOption == 2) { // 50 drags
-                dragLimit = 50;
-
-            } else { // 100 drags
-                dragLimit = 100;
-
-            }
+            case 2: // drag total
+                switch (gameModeOption) {
+                    case 1: // 10 drags
+                        dragLimit = 10;
+                        break;
+                    case 2: // 50 drags
+                        dragLimit = 50;
+                        break;
+                    case 3: // 100 drags
+                        dragLimit = 100;
+                        break;
+                }
+            break;
         }
 
         dragArea = (SurfaceView) findViewById(R.id.dragArea);
         setDragArea(difficulty);
         dragArea.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent swipe) {
-                // start button has not been pressed
-                if (!gameRunning) { return false; }
+                // Game is not running or is paused.
+                if (!gameState.equals(GameState.ON)) {
+                    return false;
+                }
 
                 switch (swipe.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -110,7 +145,6 @@ public class Game extends ActionBarActivity {
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-
                         // If user has already changed direction, the isLegalDrag()
                         // calculation will have already been covered in this case.
                         if (!crossedNS) {
@@ -157,26 +191,62 @@ public class Game extends ActionBarActivity {
                         break;
                 }
                 dragCount.setText(Integer.toString(numSwipes));
+
+                // if drag limit met
+                if (gameMode == 2) {
+                    if (((gameModeOption == 1) && (numSwipes >= 10)) ||
+                            ((gameModeOption == 2) && (numSwipes >= 50)) ||
+                            ((gameModeOption == 3) && (numSwipes >= 100))) {
+                        dragLimitReached();
+                    }
+                }
                 return true;
             }
         });
     }
 
+    // The player has reached the total amount of drags required.
+    private void dragLimitReached() {
+        timerHandler.removeCallbacks(timerRunnable);
+        gameState = GameState.OFF;
+
+        int minutes = (int) (millisSinceStart / 60000);
+        int seconds = (int) ((millisSinceStart / 1000) % 60);
+        int millis = (int) millisSinceStart % 1000;
+
+        String result;
+        boolean isHighScore = false;
+        if (minutes > 0) {
+            result = String.format("You made %d drags in%2d:%2d.%03ds", numSwipes, minutes, seconds, millis);
+        } else {
+            result = String.format("You made %d drags in%2d.%03ds", numSwipes, seconds, millis);
+        }
+
+        if (newHighScore(millisSinceStart)) {
+            isHighScore = true;
+        }
+
+        displayToastResult(result, isHighScore);
+
+        startButton.setVisibility(View.VISIBLE);
+    }
+
     // Start button clicked.
     public void onStartButtonClick(View v) {
-        if (!gameRunning) {
-            gameRunning = true;
-            numSwipes = 0;
-            dragCount.setText(Integer.toString(numSwipes));
+        gameState = GameState.ON;
+        numSwipes = 0;
+        dragCount.setText(Integer.toString(numSwipes));
 
-            if (gameMode == 1) { // Timed game
-                countDownTimer = new GameTimer(gameTime, 10);
-                countDownTimer.start();
-            } else {
-                // countUpTimer
-            }
-            startButton.setVisibility(View.INVISIBLE);
+        if (gameMode == 1) { // Timed game
+            countDownTimer = new GameCountDownTimer(gameTime, 10);
+            countDownTimer.start();
+
+        } else { // Drag limit game
+            startTime = System.currentTimeMillis();
+            timerHandler.postDelayed(timerRunnable, 0);
         }
+
+        startButton.setVisibility(View.INVISIBLE);
     }
 
     // Finds gradient. If angle between drag and vertical line is <15degrees, drag is legal.
@@ -218,14 +288,133 @@ public class Game extends ActionBarActivity {
 
     // Pauses the game clock.
     public void onPauseClick(View v) {
-        if (gameRunning) {
-            countDownTimer.cancel();
-            gameRunning = false;
-        } else {
-            countDownTimer = new GameTimer(timeRemaining, 10);
-            countDownTimer.start();
-            gameRunning = true;
+
+        switch (gameState) {
+            case ON:
+                if (gameMode == 1) {
+                    countDownTimer.cancel();
+                } else {
+                    timerHandler.removeCallbacks(timerRunnable);
+                }
+                gameState = GameState.PAUSED;
+                break;
+
+            case PAUSED:
+                if (gameMode == 1) {
+                    countDownTimer = new GameCountDownTimer(timeRemaining, 10);
+                    countDownTimer.start();
+                } else {
+                    startTime = System.currentTimeMillis() - millisSinceStart;
+                    timerHandler.postDelayed(timerRunnable, 0);
+                }
+                gameState = GameState.ON;
+                break;
         }
+    }
+
+    // Checks to see if the score recorded is a high score.
+    // If so, update the high scores page.
+    // TIME Limit Games.
+    private boolean newHighScore(int score) {
+        sharedPrefs = getSharedPreferences("High Scores", Context.MODE_PRIVATE);
+        String gameType = "individualEasy30s"; // default
+
+        // Get existing high score from shared preferences
+        switch (difficulty) {
+            case 1:  // Easy
+                switch (gameModeOption) {
+                    case 1: gameType = "individualEasy5s"; break;
+                    case 2: gameType = "individualEasy10s"; break;
+                    case 3: gameType = "individualEasy30s"; break;
+                }
+            break;
+
+            case 2: // Moderate
+                switch (gameModeOption) {
+                    case 1: gameType = "individualModerate5s"; break;
+                    case 2: gameType = "individualModerate10s"; break;
+                    case 3: gameType = "individualModerate30s"; break;
+                }
+            break;
+
+            case 3: // Hard
+                switch (gameModeOption) {
+                    case 1: gameType = "individualHard5s"; break;
+                    case 2: gameType = "individualHard10s"; break;
+                    case 3: gameType = "individualModerate30s"; break;
+                }
+            break;
+        }
+
+        // Current Individual high score for this game type.
+        int highScore = sharedPrefs.getInt(gameType, 0);
+
+        if (score > highScore) {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putInt(gameType, score);
+            editor.apply();
+            return true;
+        }
+        return false;
+    }
+
+    // Displays final score for the player.
+    private void displayToastResult(String result, boolean isHighScore) {
+        if (isHighScore) {
+            Toast toastHighScore = Toast.makeText(getApplicationContext(), "New High Score!", Toast.LENGTH_LONG);
+            toastHighScore.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
+            toastHighScore.show();
+        }
+
+        Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
+        toast.show();
+    }
+
+    // Checks to see if the score recorded is a high score.
+    // If so, update the high scores page.
+    // DRAG Limit games only.
+    private boolean newHighScore(float millisSinceStart) {
+        sharedPrefs = getSharedPreferences("High Scores", Context.MODE_PRIVATE);
+        String gameType = "individualEasy30s"; // default
+
+        // Get existing high score from shared preferences
+        switch (difficulty) {
+            case 1:  // Easy
+                switch (gameModeOption) {
+                    case 1: gameType = "individualEasy10d"; break;
+                    case 2: gameType = "individualEasy50d"; break;
+                    case 3: gameType = "individualEasy100d"; break;
+                }
+                break;
+
+            case 2: // Moderate
+                switch (gameModeOption) {
+                    case 1: gameType = "individualModerate10d"; break;
+                    case 2: gameType = "individualModerate50d"; break;
+                    case 3: gameType = "individualModerate100d"; break;
+                }
+                break;
+
+            case 3: // Hard
+                switch (gameModeOption) {
+                    case 1: gameType = "individualHard10d"; break;
+                    case 2: gameType = "individualHard50d"; break;
+                    case 3: gameType = "individualHard100d"; break;
+                }
+                break;
+        }
+
+        // Current Individual high score for this game type.
+        float highScore = sharedPrefs.getFloat(gameType, 0);
+
+        if ((millisSinceStart < (long) highScore) || (highScore == 0)) {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putFloat(gameType, millisSinceStart);
+            editor.apply();
+            return true;
+        }
+        return false;
     }
 
     // Prints stats to screen for debugging purposes
@@ -244,6 +433,40 @@ public class Game extends ActionBarActivity {
                         "\nSwipe Direction: " + swipeDirection +
                         "\ncrossedNS: " + Boolean.toString(crossedNS)
         );
+    }
+
+    // Inner class. Timer for time-limit games.
+    public class GameCountDownTimer extends CountDownTimer {
+
+        public GameCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            int seconds = (int) (millisUntilFinished / 1000);
+            int millis = (int) (millisUntilFinished % 1000);
+
+            timeRemaining = millisUntilFinished;
+            timerValue.setText(String.format("%02d.%03ds", seconds, millis));
+        }
+
+        @Override
+        public void onFinish() {
+            gameState = GameState.OFF;
+            timerValue.setText("0.000s");
+
+            String result = "You made " + numSwipes + " drags in " + gameTime / 1000 + " seconds";
+            boolean isHighScore = false;
+
+            if (newHighScore(numSwipes)) {
+                isHighScore = true;
+            }
+
+            displayToastResult(result, isHighScore);
+
+            startButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -267,118 +490,4 @@ public class Game extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    // Checks to see if the score recorded is a high score.
-    // If so, update the high scores page.
-    private boolean newHighScore(int score) {
-        sharedPrefs = getSharedPreferences("High Scores", Context.MODE_PRIVATE);
-        String gameType = "individualEasy30s"; // default
-
-        // Get existing high score from shared preferences
-        switch (difficulty) {
-            // Easy
-            case 1:
-                switch (gameMode) {
-                    case 1:
-                        switch (gameModeOption) {
-                            case 1: gameType = "individualEasy5s"; break;
-                            case 2: gameType = "individualEasy10s"; break;
-                            case 3: gameType = "individualEasy30s"; break;
-                        }
-                    break;
-                    case 2:
-                        switch (gameModeOption) {
-                            case 1: gameType = "individualEasy10d"; break;
-                            case 2: gameType = "individualEasy50d"; break;
-                            case 3: gameType = "individualEasy100d"; break;
-                        }
-                    break;
-                }
-            break;
-            // Moderate
-            case 2:
-                switch (gameMode) {
-                    case 1:
-                        switch (gameModeOption) {
-                            case 1: gameType = "individualModerate5s"; break;
-                            case 2: gameType = "individualModerate10s"; break;
-                            case 3: gameType = "individualModerate30s"; break;
-                        }
-                    break;
-                    case 2:
-                        switch (gameModeOption) {
-                            case 1: gameType = "individualModerate10d"; break;
-                            case 2: gameType = "individualModerate50d"; break;
-                            case 3: gameType = "individualModerate100d"; break;
-                        }
-                    break;
-                }
-            break;
-            // Hard
-            case 3:
-                switch (gameMode) {
-                    case 1:
-                        switch (gameModeOption) {
-                            case 1: gameType = "individualHard5s"; break;
-                            case 2: gameType = "individualHard10s"; break;
-                            case 3: gameType = "individualModerate30s"; break;
-                        }
-                    break;
-                    case 2:
-                        switch (gameModeOption) {
-                            case 1: gameType = "individualHard10d"; break;
-                            case 2: gameType = "individualHard50d"; break;
-                            case 3: gameType = "individualHard100d"; break;
-                        }
-                    break;
-                }
-            break;
-        }
-        // Current Individual high score for this game type.
-        int highScore = sharedPrefs.getInt(gameType, 0);
-
-        Toast.makeText(getApplicationContext(), Integer.toString(highScore),
-                Toast.LENGTH_LONG).show();
-
-        if (score > highScore) {
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-
-            Toast.makeText(getApplicationContext(), gameType, Toast.LENGTH_LONG).show();
-            editor.putInt(gameType, score);
-            editor.apply();
-            return true;
-        }
-        return false;
-    }
-
-    // Inner class. Timer for time-limit games.
-    public class GameTimer extends CountDownTimer {
-
-        public GameTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            int seconds = (int) (millisUntilFinished / 1000);
-            int millis = (int) (millisUntilFinished % 1000);
-            timeRemaining = millisUntilFinished;
-            timerValue.setText(String.format("%02d:%03d", seconds, millis));
-        }
-
-        @Override
-        public void onFinish() {
-            gameRunning = false;
-            timerValue.setText("You made " + numSwipes + " drags in " +
-                    gameTime / 1000 + " seconds" );
-            if (newHighScore(numSwipes)) {
-                Toast.makeText(getApplicationContext(), "New High Score!",
-                        Toast.LENGTH_LONG).show();
-            }
-
-            startButton.setVisibility(View.VISIBLE);
-        }
-
-    }
-
 }

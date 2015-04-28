@@ -43,10 +43,7 @@ public class TopMenu extends ActionBarActivity implements View.OnClickListener {
         goToInstructions = new Intent(this, Instructions.class);
     }
 
-    /*
-     * This will check whether a button has been pressed and if true call
-     * the appropriate method
-     */
+    // If a button has been pressed the appropriate method will be called.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_game_button:
