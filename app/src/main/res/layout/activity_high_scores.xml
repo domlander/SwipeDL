@@ -1,94 +1,144 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:layout_gravity="center|top"
+    android:background="#ffe4e4ff"
     tools:context="com.dominik.swipedl.HighScoresActivity">
+
+    <LinearLayout
+        android:id="@+id/topMenu"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:weightSum="3"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/GameMenuBar"
+            android:text="@string/play"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="1dp"
+            android:textColor="#fff1f1f1"
+            android:background="#ff0a075f" />
+
+        <Button
+            android:id="@+id/SettingsMenuBar"
+            android:text="@string/settings"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="1dp"
+            android:textColor="#fff1f1f1"
+            android:background="#ff0a075f" />
+
+        <Button
+            android:id="@+id/HighScoresMenuBar"
+            android:text="@string/high_scores"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#ff0a075f"
+            android:background="#ffe4e4ff"
+            android:clickable="false" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/HighScores"
         android:text="@string/high_scores"
         android:textSize="40sp"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/topMenu"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp" />
 
-    <Button
-        android:id="@+id/Individual"
-        android:text="Individual"
+    <LinearLayout
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/HighScores"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:textAllCaps="false" />
+        android:layout_centerHorizontal="true" >
 
-    <Button
-        android:id="@+id/Group"
-        android:text="Group"
-        android:layout_below="@+id/HighScores"
-        android:layout_toRightOf="@+id/Individual"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/Individual"
+            android:text="Individual"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/World"
-        android:text="World"
-        android:layout_below="@+id/HighScores"
-        android:layout_toRightOf="@+id/Group"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/Group"
+            android:text="Group"
+            android:layout_toRightOf="@+id/Individual"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/Easy"
-        android:text="Easy"
-        android:layout_below="@+id/Individual"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/World"
+            android:text="World"
+            android:layout_toRightOf="@+id/Group"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textAllCaps="false" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/Moderate"
-        android:text="Moderate"
-        android:layout_below="@+id/Group"
-        android:layout_toRightOf="@+id/Individual"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:id="@+id/difficulty"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:textAllCaps="false" />
+        android:layout_below="@+id/location"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-10dp">
 
-    <Button
-        android:id="@+id/Hard"
-        android:text="Hard"
-        android:layout_below="@+id/World"
-        android:layout_toRightOf="@+id/Moderate"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/Easy"
+            android:text="Easy"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:clickable="true"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/Moderate"
+            android:text="Moderate"
+            android:layout_toRightOf="@+id/Individual"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/Hard"
+            android:text="Hard"
+            android:layout_toRightOf="@+id/Moderate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textAllCaps="false" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/SelectGroup"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Easy"
-        android:layout_alignLeft="@id/Individual"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="-30dp"
-        android:layout_marginBottom="10dp" >
+        android:layout_below="@+id/difficulty"
+        android:layout_centerHorizontal="true" >
 
         <TextView
             android:id="@+id/SelectGroupText"
@@ -102,154 +152,164 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"/>
-
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/Best5s"
-        android:text="Best 5s score:"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/results"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/SelectGroup"
-        android:layout_alignLeft="@id/SelectGroup" />
+        android:layout_centerHorizontal="true" >
 
-    <TextView
-        android:id="@+id/Best10s"
-        android:text="Best 10s score:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best5s"
-        android:layout_alignLeft="@id/SelectGroup" />
+        <TextView
+            android:id="@+id/Best5s"
+            android:text="Best 5s score:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/Best30s"
-        android:text="Best 30s score:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best10s"
-        android:layout_alignLeft="@id/SelectGroup" />
+        <TextView
+            android:id="@+id/Best10s"
+            android:text="Best 10s score:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best5s"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/Best10drags"
-        android:text="Best 10 drags time:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best30s"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@id/SelectGroup" />
+        <TextView
+            android:id="@+id/Best30s"
+            android:text="Best 30s score:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best10s"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/Best50drags"
-        android:text="Best 50 drags time:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best10drags"
-        android:layout_alignLeft="@id/SelectGroup" />
+        <TextView
+            android:id="@+id/Best10drags"
+            android:text="Best 10 drags time:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best30s"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/Best100drags"
-        android:text="Best 100 drags time:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best50drags"
-        android:layout_alignLeft="@id/SelectGroup" />
+        <TextView
+            android:id="@+id/Best50drags"
+            android:text="Best 50 drags time:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best10drags"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/Best5sValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/SelectGroup"
-        android:layout_alignLeft="@id/World" />
+        <TextView
+            android:id="@+id/Best100drags"
+            android:text="Best 100 drags time:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best50drags"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/Best10sValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best5s"
-        android:layout_alignLeft="@id/World" />
+        <TextView
+            android:id="@+id/Best5sValue"
+            android:text="@string/zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_toRightOf="@id/Best100drags" />
 
-    <TextView
-        android:id="@+id/Best30sValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best10s"
-        android:layout_alignLeft="@id/World" />
+        <TextView
+            android:id="@+id/Best10sValue"
+            android:text="@string/zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best5s"
+            android:layout_marginLeft="80dp"
+            android:layout_toRightOf="@id/Best100drags" />
 
-    <TextView
-        android:id="@+id/Best10dragsValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best30s"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@id/World" />
+        <TextView
+            android:id="@+id/Best30sValue"
+            android:text="@string/zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best10s"
+            android:layout_marginLeft="80dp"
+            android:layout_toRightOf="@id/Best100drags" />
 
-    <TextView
-        android:id="@+id/Best50dragsValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best10drags"
-        android:layout_alignLeft="@id/World" />
+        <TextView
+            android:id="@+id/Best10dragsValue"
+            android:text="@string/zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best30s"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="80dp"
+            android:layout_toRightOf="@id/Best100drags" />
 
-    <TextView
-        android:id="@+id/Best100dragsValue"
-        android:text="@string/zero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best50drags"
-        android:layout_alignLeft="@id/World" />
+        <TextView
+            android:id="@+id/Best50dragsValue"
+            android:text="@string/zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best10drags"
+            android:layout_marginLeft="80dp"
+            android:layout_toRightOf="@id/Best100drags" />
 
-    <TextView
-        android:text="@string/drags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/SelectGroup"
-        android:layout_toRightOf="@id/Best5sValue"
-        android:layout_marginLeft="3dp" />
+        <TextView
+            android:id="@+id/Best100dragsValue"
+            android:text="@string/zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best50drags"
+            android:layout_marginLeft="80dp"
+            android:layout_toRightOf="@id/Best100drags" />
 
-    <TextView
-        android:text="@string/drags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best5s"
-        android:layout_toRightOf="@id/Best10sValue"
-        android:layout_marginLeft="3dp" />
+        <TextView
+            android:text="@string/drags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/Best5sValue"
+            android:layout_marginLeft="3dp" />
 
-    <TextView
-        android:text="@string/drags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best10s"
-        android:layout_toRightOf="@id/Best30sValue"
-        android:layout_marginLeft="3dp" />
+        <TextView
+            android:text="@string/drags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best5s"
+            android:layout_toRightOf="@id/Best10sValue"
+            android:layout_marginLeft="3dp" />
 
-    <TextView
-        android:text="@string/seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best30s"
-        android:layout_toRightOf="@id/Best10dragsValue"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="3dp" />
+        <TextView
+            android:text="@string/drags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best10s"
+            android:layout_toRightOf="@id/Best30sValue"
+            android:layout_marginLeft="3dp" />
 
-    <TextView
-        android:text="@string/seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best10dragsValue"
-        android:layout_toRightOf="@id/Best50dragsValue"
-        android:layout_marginLeft="3dp" />
+        <TextView
+            android:text="@string/seconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best30s"
+            android:layout_toRightOf="@id/Best10dragsValue"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="3dp" />
 
-    <TextView
-        android:text="@string/seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Best50dragsValue"
-        android:layout_toRightOf="@id/Best100dragsValue"
-        android:layout_marginLeft="3dp" />
+        <TextView
+            android:text="@string/seconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best10dragsValue"
+            android:layout_toRightOf="@id/Best50dragsValue"
+            android:layout_marginLeft="3dp" />
+
+        <TextView
+            android:text="@string/seconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Best50dragsValue"
+            android:layout_toRightOf="@id/Best100dragsValue"
+            android:layout_marginLeft="3dp" />
+    </RelativeLayout>
 
 </RelativeLayout>

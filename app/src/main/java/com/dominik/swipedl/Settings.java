@@ -21,6 +21,8 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     private int gameModeOption;
     private int difficulty;
 
+    private Button game_button;
+    private Button high_scores_button;
     private Button one_player_button;
     private Button two_player_button;
     private Button time_limit_button;
@@ -44,6 +46,12 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         gameMode = sharedPrefs.getInt("gameMode", 1);
         gameModeOption = sharedPrefs.getInt("gameModeOption", 3);
         difficulty = sharedPrefs.getInt("difficulty", 1);
+
+        game_button = (Button) findViewById(R.id.GameMenuBar);
+        game_button.setOnClickListener(this);
+
+        high_scores_button = (Button) findViewById(R.id.HighScoresMenuBar);
+        high_scores_button.setOnClickListener(this);
 
         one_player_button = (Button) findViewById(R.id.OnePlayer);
         one_player_button.setOnClickListener(this);
@@ -87,6 +95,14 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.GameMenuBar:
+                menuBarGame();
+                return;
+
+            case R.id.HighScoresMenuBar:
+                menuBarHighScores();
+                return;
+
             case R.id.OnePlayer:
                 numPlayers = 1;
                 break;
@@ -151,6 +167,16 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
         updateButtonState();
     }
 
+    public void menuBarGame() {
+        Intent goToGame = new Intent(this, Game.class);
+        startActivity(goToGame);
+    }
+
+    public void menuBarHighScores() {
+        Intent goToHighScores = new Intent(this, HighScores.class);
+        startActivity(goToHighScores);
+    }
+
     // Button selected ? button colour = green : button colour = grey
     private void updateButtonState() {
 
@@ -200,16 +226,16 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
             selectedDifficulty = hard_button;
         }
 
-        one_player_button.setBackgroundColor(Color.LTGRAY);
-        two_player_button.setBackgroundColor(Color.LTGRAY);
-        time_limit_button.setBackgroundColor(Color.LTGRAY);
-        drag_limit_button.setBackgroundColor(Color.LTGRAY);
-        game_mode_option_one_button.setBackgroundColor(Color.LTGRAY);
-        game_mode_option_two_button.setBackgroundColor(Color.LTGRAY);
-        game_mode_option_three_button.setBackgroundColor(Color.LTGRAY);
-        easy_button.setBackgroundColor(Color.LTGRAY);
-        medium_button.setBackgroundColor(Color.LTGRAY);
-        hard_button.setBackgroundColor(Color.LTGRAY);
+        one_player_button.setBackgroundColor(0xffe4e4ff);
+        two_player_button.setBackgroundColor(0xffe4e4ff);
+        time_limit_button.setBackgroundColor(0xffe4e4ff);
+        drag_limit_button.setBackgroundColor(0xffe4e4ff);
+        game_mode_option_one_button.setBackgroundColor(0xffe4e4ff);
+        game_mode_option_two_button.setBackgroundColor(0xffe4e4ff);
+        game_mode_option_three_button.setBackgroundColor(0xffe4e4ff);
+        easy_button.setBackgroundColor(0xffe4e4ff);
+        medium_button.setBackgroundColor(0xffe4e4ff);
+        hard_button.setBackgroundColor(0xffe4e4ff);
 
         selectedNumPlayers.setBackgroundColor(Color.GREEN);
         selectedTimeLimit.setBackgroundColor(Color.GREEN);

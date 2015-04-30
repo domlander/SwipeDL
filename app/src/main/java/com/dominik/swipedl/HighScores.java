@@ -1,6 +1,7 @@
 package com.dominik.swipedl;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.CountDownTimer;
@@ -25,6 +26,8 @@ import static android.view.View.*;
 public class HighScores extends ActionBarActivity implements AdapterView.OnItemSelectedListener, OnClickListener {
 
     // UI controls
+    Button game_button;
+    Button settings_button;
     TextView SelectGroupText;
     Spinner spinner;
     TextView highScore5s;
@@ -91,6 +94,12 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
 //        }
         userNames.add("Test Group 1"); // debug
         userNames.add("Test Group 2"); // debug
+
+        game_button = (Button) findViewById(R.id.GameMenuBar);
+        game_button.setOnClickListener(this);
+
+        settings_button = (Button) findViewById(R.id.SettingsMenuBar);
+        settings_button.setOnClickListener(this);
 
         SelectGroupText = (TextView) findViewById(R.id.SelectGroupText);
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -202,6 +211,14 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.GameMenuBar:
+                menuBarGame();
+                return;
+
+            case R.id.SettingsMenuBar:
+                menuBarSettings();
+                return;
+
             case R.id.Individual:
                 individualSelected();
                 break;
@@ -227,6 +244,16 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
                 break;
         }
         updateHighScores();
+    }
+
+    public void menuBarGame() {
+        Intent goToGame = new Intent(this, Game.class);
+        startActivity(goToGame);
+    }
+
+    public void menuBarSettings() {
+        Intent goToSettings = new Intent(this, Settings.class);
+        startActivity(goToSettings);
     }
 
     // Updates the colour of the buttons and populates the

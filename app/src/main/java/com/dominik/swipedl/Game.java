@@ -26,6 +26,9 @@ public class Game extends ActionBarActivity {
     TextView debugText;
     Button startButton;
     Button pauseButton;
+    TextView countDownNumberTextView;
+    TextView pausedText1;
+    TextView pausedText2;
 
     private GameState gameState;
     private int numSwipes = 0;
@@ -51,6 +54,9 @@ public class Game extends ActionBarActivity {
     int difficulty;
 
     private long timeRemaining;
+
+    CountDownTimer preGameCountDownTimer;
+    int preGameCountDownNumber;
 
     GameCountDownTimer countDownTimer;
 
@@ -87,6 +93,11 @@ public class Game extends ActionBarActivity {
         startButton = (Button) findViewById(R.id.startButton);
         pauseButton = (Button) findViewById(R.id.pauseButton);
         timerValue = (TextView) findViewById(R.id.timerValue);
+        countDownNumberTextView = (TextView) findViewById(R.id.countdownNumber);
+        pausedText1 = (TextView) findViewById(R.id.pauseText1);
+        pausedText2 = (TextView) findViewById(R.id.pauseText2);
+        pausedText1.setVisibility(View.INVISIBLE);
+        pausedText2.setVisibility(View.INVISIBLE);
 
         // Get settings: difficulty/game mode.
         sharedPrefs = getSharedPreferences("Settings", Context.MODE_PRIVATE);
@@ -203,13 +214,55 @@ public class Game extends ActionBarActivity {
                 return true;
             }
         });
+
+        preGameCountDownNumber = 3;
+
+        preGameCountDownTimer = new CountDownTimer(800, 1) {
+            int textSize = 40;
+            public void onTick(long millisUntilFinished) {
+                countDownNumberTextView.setTextSize(textSize++);
+            }
+
+            public void onFinish() {
+                textSize = 40;
+                preGameCountDownNumber -= 1;
+                countDownNumberTextView.setTextSize(textSize);
+                preGameCountDown();
+            }
+        };
+
+        CountDownTimer delayTimer = new CountDownTimer(300, 300) {
+            public void onTick(long millisUntilFinished) { }
+
+            public void onFinish() {
+                preGameCountDown();
+            }
+        };
+        // delay timer countdown. Gives activity time to load before countdown starts.
+        delayTimer.start();
+
+    } // onCreate() end
+
+    // pre game count down timer
+    private void preGameCountDown() {
+        countDownNumberTextView.setText(Integer.toString(preGameCountDownNumber));
+        countDownNumberTextView.setVisibility(View.VISIBLE);
+        if (preGameCountDownNumber > 0) {
+            preGameCountDownTimer.start();
+
+        } else {
+            preGameCountDownNumber = 3;
+            countDownNumberTextView.setVisibility(View.INVISIBLE);
+            startGame();
+        }
     }
 
-    // Start button clicked.
-    public void onStartButtonClick(View v) {
+    // Start the game timer.
+    public void startGame() {
         gameState = GameState.ON;
         numSwipes = 0;
         dragCount.setText(Integer.toString(numSwipes));
+        timerValue.setVisibility(View.VISIBLE);
 
         if (gameMode == 1) { // Timed game
             countDownTimer = new GameCountDownTimer(gameTime, 10);
@@ -223,6 +276,12 @@ public class Game extends ActionBarActivity {
         startButton.setVisibility(View.INVISIBLE);
     }
 
+    public void onStartButtonClick(View v) {
+        startButton.setVisibility(View.INVISIBLE);
+        timerValue.setVisibility(View.INVISIBLE);
+        preGameCountDown();
+    }
+
     // Pauses the game clock.
     public void onPauseClick(View v) {
         switch (gameState) {
@@ -233,6 +292,8 @@ public class Game extends ActionBarActivity {
                     timerHandler.removeCallbacks(timerRunnable);
                 }
                 gameState = GameState.PAUSED;
+                pausedText1.setVisibility(View.VISIBLE);
+                pausedText2.setVisibility(View.VISIBLE);
                 break;
 
             case PAUSED:
@@ -244,6 +305,8 @@ public class Game extends ActionBarActivity {
                     timerHandler.postDelayed(timerRunnable, 0);
                 }
                 gameState = GameState.ON;
+                pausedText1.setVisibility(View.INVISIBLE);
+                pausedText2.setVisibility(View.INVISIBLE);
                 break;
         }
     }
