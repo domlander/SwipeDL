@@ -21,20 +21,20 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     private int gameModeOption;
     private int difficulty;
 
-    private Button game_button;
-    private Button high_scores_button;
-    private Button one_player_button;
-    private Button two_player_button;
-    private Button time_limit_button;
-    private Button drag_limit_button;
-    private Button game_mode_option_one_button;
-    private Button game_mode_option_two_button;
-    private Button game_mode_option_three_button;
-    private Button easy_button;
-    private Button medium_button;
-    private Button hard_button;
-    private Button save_button;
-    private Button cancel_button;
+    Button game_button;
+    Button high_scores_button;
+    Button one_player_button;
+    Button two_player_button;
+    Button time_limit_button;
+    Button drag_limit_button;
+    Button game_mode_option_one_button;
+    Button game_mode_option_two_button;
+    Button game_mode_option_three_button;
+    Button easy_button;
+    Button medium_button;
+    Button hard_button;
+    Button save_button;
+    Button cancel_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,16 +226,16 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
             selectedDifficulty = hard_button;
         }
 
-        one_player_button.setBackgroundColor(0xffe4e4ff);
-        two_player_button.setBackgroundColor(0xffe4e4ff);
-        time_limit_button.setBackgroundColor(0xffe4e4ff);
-        drag_limit_button.setBackgroundColor(0xffe4e4ff);
-        game_mode_option_one_button.setBackgroundColor(0xffe4e4ff);
-        game_mode_option_two_button.setBackgroundColor(0xffe4e4ff);
-        game_mode_option_three_button.setBackgroundColor(0xffe4e4ff);
-        easy_button.setBackgroundColor(0xffe4e4ff);
-        medium_button.setBackgroundColor(0xffe4e4ff);
-        hard_button.setBackgroundColor(0xffe4e4ff);
+        one_player_button.setBackgroundColor(0xffd9d9f4);
+        two_player_button.setBackgroundColor(0xffd9d9f4);
+        time_limit_button.setBackgroundColor(0xffd9d9f4);
+        drag_limit_button.setBackgroundColor(0xffd9d9f4);
+        game_mode_option_one_button.setBackgroundColor(0xffd9d9f4);
+        game_mode_option_two_button.setBackgroundColor(0xffd9d9f4);
+        game_mode_option_three_button.setBackgroundColor(0xffd9d9f4);
+        easy_button.setBackgroundColor(0xffd9d9f4);
+        medium_button.setBackgroundColor(0xffd9d9f4);
+        hard_button.setBackgroundColor(0xffd9d9f4);
 
         selectedNumPlayers.setBackgroundColor(Color.GREEN);
         selectedTimeLimit.setBackgroundColor(Color.GREEN);
@@ -256,14 +256,13 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
 
         editor.apply();
 
-        returnHome();
+        Intent goToGame = new Intent(this, Game.class);
+        startActivity(goToGame);
     }
 
-    private void cancelSelected() { returnHome(); }
-
-    private void returnHome() {
-        Intent returnHome = new Intent(this, TopMenu.class);
-        startActivity(returnHome);
+    private void cancelSelected() {
+        Intent goToTopMenu = new Intent(this, TopMenu.class);
+        startActivity(goToTopMenu);
     }
 
     @Override

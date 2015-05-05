@@ -14,7 +14,7 @@
     <LinearLayout
         android:id="@+id/topMenu"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:weightSum="3"
         android:orientation="horizontal">
@@ -77,6 +77,8 @@
             android:text="@string/one_player"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -86,6 +88,8 @@
             android:layout_toRightOf="@+id/OnePlayer"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
     </LinearLayout>
@@ -102,6 +106,8 @@
             android:text="@string/time_limit"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -111,6 +117,8 @@
             android:layout_toRightOf="@+id/TimeLimit"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
     </LinearLayout>
@@ -128,6 +136,8 @@
             android:text="@string/option_one"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -137,6 +147,8 @@
             android:layout_toRightOf="@+id/GameModeOptionOne"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -146,6 +158,8 @@
             android:layout_toRightOf="@+id/GameModeOptionTwo"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
     </LinearLayout>
@@ -163,6 +177,8 @@
             android:text="@string/easy"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -172,6 +188,8 @@
             android:layout_toRightOf="@+id/Easy"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -181,6 +199,8 @@
             android:layout_toRightOf="@+id/Medium"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
             android:clickable="true"
             android:textAllCaps="false" />
     </LinearLayout>
@@ -192,22 +212,14 @@
         android:layout_below="@+id/difficulty"
         android:layout_centerHorizontal="true" >
 
-        <LinearLayout
+        <Button
+            android:id="@+id/Save"
+            android:text="@string/save"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:background="#ff777777" >
-            <Button
-                android:id="@+id/Save"
-                android:text="@string/save"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#ffd9d9f4"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginTop="1dp" />
-        </LinearLayout>
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
+            android:layout_alignParentLeft="true"  />
 
         <Button
             android:id="@+id/dummyLayoutButton"
@@ -215,22 +227,14 @@
             android:layout_height="wrap_content"
             android:visibility="invisible" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/Cancel"
+            android:text="@string/cancel"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:background="#ff777777" >
-            <Button
-                android:id="@+id/Cancel"
-                android:text="@string/cancel"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#ffd9d9f4"
-                android:layout_toRightOf="@+id/dummyLayoutButton"
-                android:layout_marginLeft="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginTop="1dp" />
-        </LinearLayout>
+            android:background="#ffd9d9f4"
+            android:textColor="#ff0a075f"
+            android:layout_toRightOf="@+id/dummyLayoutButton" />
     </LinearLayout>
 
     <TextView

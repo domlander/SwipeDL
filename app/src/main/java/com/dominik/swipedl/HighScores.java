@@ -289,12 +289,12 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
         }
 
         // Set the background colour of the selected buttons to green and the others to grey.
-        individual_button.setBackgroundColor(Color.LTGRAY);
-        group_button.setBackgroundColor(Color.LTGRAY);
-        world_button.setBackgroundColor(Color.LTGRAY);
-        easy_button.setBackgroundColor(Color.LTGRAY);
-        moderate_button.setBackgroundColor(Color.LTGRAY);
-        hard_button.setBackgroundColor(Color.LTGRAY);
+        individual_button.setBackgroundColor(0xffd9d9f4);
+        group_button.setBackgroundColor(0xffd9d9f4);
+        world_button.setBackgroundColor(0xffd9d9f4);
+        easy_button.setBackgroundColor(0xffd9d9f4);
+        moderate_button.setBackgroundColor(0xffd9d9f4);
+        hard_button.setBackgroundColor(0xffd9d9f4);
 
         locality_button.setBackgroundColor(Color.GREEN);
         difficulty_button.setBackgroundColor(Color.GREEN);

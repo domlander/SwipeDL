@@ -1,11 +1,14 @@
 package com.dominik.swipedl;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +23,14 @@ import android.widget.Toast;
 
 public class Game extends ActionBarActivity {
 
+    Button playButton;
+    Button settingsButton;
+    Button highScoresButton;
     TextView dragCount;
     TextView timerValue;
+    TextView completionMessage;
+    TextView newHighScoreMessage;
     SurfaceView dragArea;
-    TextView debugText;
     Button startButton;
     Button pauseButton;
     TextView countDownNumberTextView;
@@ -34,6 +41,9 @@ public class Game extends ActionBarActivity {
     private int numSwipes = 0;
     private final String UP = "UP";
     private final String DOWN = "DOWN";
+
+    // for debug messages
+    private static final String TAG = "Game";
 
     private String swipeDirection;
     private boolean crossedNS; // if true, the user has changed swipe directions.
@@ -54,6 +64,8 @@ public class Game extends ActionBarActivity {
     int difficulty;
 
     private long timeRemaining;
+
+    CountDownTimer displayResultCountDownTimer;
 
     CountDownTimer preGameCountDownTimer;
     int preGameCountDownNumber;
@@ -86,16 +98,22 @@ public class Game extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
-        gameState = GameState.OFF;
-
         // UI
+        playButton = (Button) findViewById(R.id.GameMenuBar);
+        settingsButton = (Button) findViewById(R.id.SettingsMenuBar);
+        highScoresButton = (Button) findViewById(R.id.HighScoresMenuBar);
         dragCount = (TextView) findViewById(R.id.count);
         startButton = (Button) findViewById(R.id.startButton);
         pauseButton = (Button) findViewById(R.id.pauseButton);
         timerValue = (TextView) findViewById(R.id.timerValue);
+        completionMessage = (TextView) findViewById(R.id.result);
+        newHighScoreMessage = (TextView) findViewById(R.id.newHighScore);
         countDownNumberTextView = (TextView) findViewById(R.id.countdownNumber);
         pausedText1 = (TextView) findViewById(R.id.pauseText1);
         pausedText2 = (TextView) findViewById(R.id.pauseText2);
+
+        completionMessage.setVisibility(View.INVISIBLE);
+        newHighScoreMessage.setVisibility(View.INVISIBLE);
         pausedText1.setVisibility(View.INVISIBLE);
         pausedText2.setVisibility(View.INVISIBLE);
 
@@ -137,6 +155,8 @@ public class Game extends ActionBarActivity {
             break;
         }
 
+        gameState = GameState.OFF;
+
         dragArea = (SurfaceView) findViewById(R.id.dragArea);
         setDragArea(difficulty);
         dragArea.setOnTouchListener(new View.OnTouchListener() {
@@ -152,7 +172,7 @@ public class Game extends ActionBarActivity {
                         x_start = swipe.getX();
                         y_start = y_min = y_max = swipe.getY();
                         swipeDirection = "";
-//                      debugText(swipe,"down");
+                        debugInfo(swipe,"down");
                         break;
 
                     case MotionEvent.ACTION_MOVE:
@@ -188,7 +208,6 @@ public class Game extends ActionBarActivity {
                                 numSwipes += 1;
                             }
                         }
-//                      debugText(swipe,"move");
                         break;
 
                     case MotionEvent.ACTION_UP:
@@ -198,7 +217,7 @@ public class Game extends ActionBarActivity {
                             numSwipes += 1;
                         }
                         crossedNS = false;
-//                      debugText(swipe,"up");
+                        debugInfo(swipe,"up");
                         break;
                 }
                 dragCount.setText(Integer.toString(numSwipes));
@@ -220,7 +239,9 @@ public class Game extends ActionBarActivity {
         preGameCountDownTimer = new CountDownTimer(800, 1) {
             int textSize = 40;
             public void onTick(long millisUntilFinished) {
-                countDownNumberTextView.setTextSize(textSize++);
+                if (textSize < 90) {
+                    countDownNumberTextView.setTextSize(textSize++);
+                }
             }
 
             public void onFinish() {
@@ -231,20 +252,27 @@ public class Game extends ActionBarActivity {
             }
         };
 
+        // Delay timer countdown. Gives activity time to load before countdown starts.
         CountDownTimer delayTimer = new CountDownTimer(300, 300) {
             public void onTick(long millisUntilFinished) { }
+            public void onFinish() { preGameCountDown(); }
+        };
+        delayTimer.start();
 
+        // Hides result completion message after a period of time.
+        displayResultCountDownTimer = new CountDownTimer(4000, 4000) {
+            public void onTick(long millisUntilFinished) { }
             public void onFinish() {
-                preGameCountDown();
+                newHighScoreMessage.setVisibility(View.INVISIBLE);
+                completionMessage.setVisibility(View.INVISIBLE);
             }
         };
-        // delay timer countdown. Gives activity time to load before countdown starts.
-        delayTimer.start();
 
     } // onCreate() end
 
-    // pre game count down timer
+    // Called for each number in the countdown.
     private void preGameCountDown() {
+        gameState = GameState.COUNTDOWN;
         countDownNumberTextView.setText(Integer.toString(preGameCountDownNumber));
         countDownNumberTextView.setVisibility(View.VISIBLE);
         if (preGameCountDownNumber > 0) {
@@ -274,39 +302,73 @@ public class Game extends ActionBarActivity {
         }
 
         startButton.setVisibility(View.INVISIBLE);
+        pauseButton.setVisibility(View.VISIBLE);
+        playButton.setVisibility(View.INVISIBLE);
+        settingsButton.setVisibility(View.INVISIBLE);
+        highScoresButton.setVisibility(View.INVISIBLE);
     }
 
     public void onStartButtonClick(View v) {
         startButton.setVisibility(View.INVISIBLE);
+        pauseButton.setVisibility(View.VISIBLE);
         timerValue.setVisibility(View.INVISIBLE);
+        playButton.setVisibility(View.INVISIBLE);
+        settingsButton.setVisibility(View.INVISIBLE);
+        highScoresButton.setVisibility(View.INVISIBLE);
         preGameCountDown();
     }
 
     // Pauses the game clock.
     public void onPauseClick(View v) {
         switch (gameState) {
+            case COUNTDOWN:
+                preGameCountDownTimer.cancel();
+
+                gameState = GameState.PAUSED;
+                pausedText1.setVisibility(View.VISIBLE);
+                pausedText2.setVisibility(View.VISIBLE);
+                playButton.setVisibility(View.VISIBLE);
+                settingsButton.setVisibility(View.VISIBLE);
+                highScoresButton.setVisibility(View.VISIBLE);
+                break;
+
             case ON:
                 if (gameMode == 1) {
                     countDownTimer.cancel();
                 } else {
                     timerHandler.removeCallbacks(timerRunnable);
                 }
+
                 gameState = GameState.PAUSED;
                 pausedText1.setVisibility(View.VISIBLE);
                 pausedText2.setVisibility(View.VISIBLE);
+                playButton.setVisibility(View.VISIBLE);
+                settingsButton.setVisibility(View.VISIBLE);
+                highScoresButton.setVisibility(View.VISIBLE);
                 break;
 
             case PAUSED:
-                if (gameMode == 1) {
-                    countDownTimer = new GameCountDownTimer(timeRemaining, 10);
-                    countDownTimer.start();
+                // game paused during pre-game countdown.
+                if (countDownNumberTextView.getVisibility() == View.VISIBLE) {
+                    preGameCountDownTimer.start();
+                    gameState = GameState.COUNTDOWN;
+
+                // game paused in game.
                 } else {
-                    startTime = System.currentTimeMillis() - millisSinceStart;
-                    timerHandler.postDelayed(timerRunnable, 0);
+                    if (gameMode == 1) {
+                        countDownTimer = new GameCountDownTimer(timeRemaining, 10);
+                        countDownTimer.start();
+                    } else {
+                        startTime = System.currentTimeMillis() - millisSinceStart;
+                        timerHandler.postDelayed(timerRunnable, 0);
+                    }
+                    gameState = GameState.ON;
                 }
-                gameState = GameState.ON;
                 pausedText1.setVisibility(View.INVISIBLE);
                 pausedText2.setVisibility(View.INVISIBLE);
+                playButton.setVisibility(View.INVISIBLE);
+                settingsButton.setVisibility(View.INVISIBLE);
+                highScoresButton.setVisibility(View.INVISIBLE);
                 break;
         }
     }
@@ -370,9 +432,13 @@ public class Game extends ActionBarActivity {
             isHighScore = true;
         }
 
-        displayToastResult(result, isHighScore);
+        displayResult(result, isHighScore);
 
         startButton.setVisibility(View.VISIBLE);
+        pauseButton.setVisibility(View.INVISIBLE);
+        playButton.setVisibility(View.VISIBLE);
+        settingsButton.setVisibility(View.VISIBLE);
+        highScoresButton.setVisibility(View.VISIBLE);
     }
 
     // If the score recorded is a high score, update the high scores page.
@@ -467,23 +533,20 @@ public class Game extends ActionBarActivity {
     }
 
     // Displays final result.
-    private void displayToastResult(String result, boolean isHighScore) {
+    private void displayResult(String result, boolean isHighScore) {
+
         if (isHighScore) {
-            Toast toastHighScore = Toast.makeText(getApplicationContext(), "New High Score!", Toast.LENGTH_LONG);
-            toastHighScore.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
-            toastHighScore.show();
+            newHighScoreMessage.setVisibility(View.VISIBLE);
         }
 
-        Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0, 380);
-        toast.show();
+        completionMessage.setText(result);
+        completionMessage.setVisibility(View.VISIBLE);
+        displayResultCountDownTimer.start();
     }
 
     // Prints stats to screen for debugging purposes
-    private void debugText(MotionEvent swipe, String action) {
-        debugText = (TextView) findViewById(R.id.debugText);
-        debugText.setText(
-                action +
+    public void debugInfo(MotionEvent swipe, String action) {
+        String debugMessage = action +
                 "\nx_start: " + String.format("%.2f", x_start) +
                 "\nx_end: " + String.format("%.2f", x_end) +
                 "\ny_start: " + String.format("%.2f", y_start) +
@@ -493,8 +556,19 @@ public class Game extends ActionBarActivity {
                 "\ngrad: " + String.format("%.2f", Math.abs((y_end - y_start) / (x_end - x_start))) +
                 "\ny: " + String.format("%.2f", swipe.getY()) +
                 "\nSwipe Direction: " + swipeDirection +
-                "\ncrossedNS: " + Boolean.toString(crossedNS)
-        );
+                "\ncrossedNS: " + Boolean.toString(crossedNS);
+
+        Log.d(TAG, debugMessage);
+    }
+
+    public void onSettingsButtonClick(View view) {
+        Intent goToSettings = new Intent(this, Settings.class);
+        startActivity(goToSettings);
+    }
+
+    public void onHighScoresButtonClick(View view) {
+        Intent goToHighScores = new Intent(this, HighScores.class);
+        startActivity(goToHighScores);
     }
 
     // Inner class. Timer for time-limit games.
@@ -525,9 +599,13 @@ public class Game extends ActionBarActivity {
                 isHighScore = true;
             }
 
-            displayToastResult(result, isHighScore);
+            displayResult(result, isHighScore);
 
             startButton.setVisibility(View.VISIBLE);
+            pauseButton.setVisibility(View.INVISIBLE);
+            playButton.setVisibility(View.VISIBLE);
+            settingsButton.setVisibility(View.VISIBLE);
+            highScoresButton.setVisibility(View.VISIBLE);
         }
     }
 

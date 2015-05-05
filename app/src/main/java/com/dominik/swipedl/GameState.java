@@ -5,6 +5,7 @@ package com.dominik.swipedl;
  */
 public enum GameState {
     ON,
+    COUNTDOWN,
     PAUSED,
     OFF
 }

@@ -46,4 +46,6 @@
     drags are only recorded within this area.</string>
     <string name="three">3</string>
     <string name="play">Play</string>
+    <string name="play_again">Play Again</string>
+    <string name="new_high_score">New High Score!</string>
 </resources>

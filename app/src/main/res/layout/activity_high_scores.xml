@@ -14,7 +14,7 @@
     <LinearLayout
         android:id="@+id/topMenu"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:weightSum="3"
         android:orientation="horizontal">
 
@@ -75,6 +75,8 @@
             android:text="Individual"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textColor="#ff0a075f"
+            android:background="#fff1f1f1"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -84,6 +86,8 @@
             android:layout_toRightOf="@+id/Individual"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textColor="#ff0a075f"
+            android:background="#fff1f1f1"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -93,6 +97,8 @@
             android:layout_toRightOf="@+id/Group"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textColor="#ff0a075f"
+            android:background="#fff1f1f1"
             android:clickable="true"
             android:textAllCaps="false" />
     </LinearLayout>
@@ -102,15 +108,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/location"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-10dp">
+        android:layout_centerHorizontal="true" >
 
         <Button
             android:id="@+id/Easy"
             android:text="Easy"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
+            android:textColor="#ff0a075f"
+            android:background="#fff1f1f1"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -120,6 +126,8 @@
             android:layout_toRightOf="@+id/Individual"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textColor="#ff0a075f"
+            android:background="#fff1f1f1"
             android:clickable="true"
             android:textAllCaps="false" />
 
@@ -129,6 +137,8 @@
             android:layout_toRightOf="@+id/Moderate"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:textColor="#ff0a075f"
+            android:background="#fff1f1f1"
             android:clickable="true"
             android:textAllCaps="false" />
     </LinearLayout>
@@ -214,7 +224,7 @@
             android:text="@string/zero"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/Best100drags" />
 
         <TextView
@@ -223,7 +233,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Best5s"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/Best100drags" />
 
         <TextView
@@ -232,7 +242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Best10s"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/Best100drags" />
 
         <TextView
@@ -242,7 +252,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/Best30s"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/Best100drags" />
 
         <TextView
@@ -251,7 +261,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Best10drags"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/Best100drags" />
 
         <TextView
@@ -260,7 +270,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Best50drags"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/Best100drags" />
 
         <TextView
