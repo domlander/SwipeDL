@@ -72,6 +72,9 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
     int worldHard5s, worldHard10s, worldHard30s;
     float worldHard10d, worldHard50d, worldHard100d;
 
+    Intent goToGame;
+    Intent goToSettings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +142,11 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
 
         regionType = "Individual";
         difficulty = "Easy";
+
+        goToGame = new Intent(this, Game.class);
+        goToSettings = new Intent(this, Settings.class);
+
+        goToSettings.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         getHighScores();
         individualSelected(); // Default selection
@@ -247,12 +255,10 @@ public class HighScores extends ActionBarActivity implements AdapterView.OnItemS
     }
 
     public void menuBarGame() {
-        Intent goToGame = new Intent(this, Game.class);
         startActivity(goToGame);
     }
 
     public void menuBarSettings() {
-        Intent goToSettings = new Intent(this, Settings.class);
         startActivity(goToSettings);
     }
 

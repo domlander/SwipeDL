@@ -1,6 +1,5 @@
 package com.dominik.swipedl;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,7 +15,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //TODO Change gameMode and gameOption to one gameMode = {t5, t10, t30, d10, d50, d100}
 
@@ -71,6 +68,9 @@ public class Game extends ActionBarActivity {
     CountDownTimer preGameCountDownTimer;
     int preGameCountDownNumber;
 
+    Intent goToSettings;
+    Intent goToHighScores;
+
     // For standard timer in drag limit games.
     long startTime = 0;
     long millisSinceStart;
@@ -111,6 +111,18 @@ public class Game extends ActionBarActivity {
         pausedText1 = (TextView) findViewById(R.id.pauseText1);
         pausedText2 = (TextView) findViewById(R.id.pauseText2);
 
+        goToSettings = new Intent(this, Settings.class);
+        goToHighScores = new Intent(this, HighScores.class);
+
+        goToSettings.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        goToHighScores.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+    } // onCreate end
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         completionMessage.setVisibility(View.INVISIBLE);
         newHighScoreMessage.setVisibility(View.INVISIBLE);
         pausedText1.setVisibility(View.INVISIBLE);
@@ -137,7 +149,7 @@ public class Game extends ActionBarActivity {
                         gameTime = 30000;
                         break;
                 }
-            break;
+                break;
 
             case 2: // drag total
                 switch (gameModeOption) {
@@ -151,7 +163,7 @@ public class Game extends ActionBarActivity {
                         dragLimit = 100;
                         break;
                 }
-            break;
+                break;
         }
 
         gameState = GameState.OFF;
@@ -267,7 +279,7 @@ public class Game extends ActionBarActivity {
             }
         };
 
-    } // onCreate() end
+    } // onStart() end
 
     // Starts the countdown to the game.
     public void onStartButtonClick(View v) {
@@ -330,12 +342,10 @@ public class Game extends ActionBarActivity {
     }
 
     public void onSettingsButtonClick(View view) {
-        Intent goToSettings = new Intent(this, Settings.class);
         startActivity(goToSettings);
     }
 
     public void onHighScoresButtonClick(View view) {
-        Intent goToHighScores = new Intent(this, HighScores.class);
         startActivity(goToHighScores);
     }
 
@@ -564,7 +574,8 @@ public class Game extends ActionBarActivity {
                 "\nx_end: " + String.format("%.2f", x_end) +
                 "\ny_start: " + String.format("%.2f", y_start) +
                 "\ny_end: " + String.format("%.2f", y_end) +
-                "\nyMin: " + String.format("%.2f", y_min) +
+                "\nyMin: " + String.format
+                ("%.2f", y_min) +
                 "\nyMax: " + String.format("%.2f", y_max) +
                 "\ngrad: " + String.format("%.2f", Math.abs((y_end - y_start) / (x_end - x_start))) +
                 "\ny: " + String.format("%.2f", swipe.getY()) +

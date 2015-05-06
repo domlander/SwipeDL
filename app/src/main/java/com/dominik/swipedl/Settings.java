@@ -36,6 +36,10 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     private int gameModeOption;
     private int difficulty;
 
+    Intent goToGame;
+    Intent goToHighScores;
+    Intent goToTopMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +92,13 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
 
         cancel_button = (Button) findViewById(R.id.Cancel);
         cancel_button.setOnClickListener(this);
+
+        goToGame = new Intent(this, Game.class);
+        goToHighScores = new Intent(this, HighScores.class);
+        goToTopMenu = new Intent(this, TopMenu.class);
+
+        goToHighScores.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        goToTopMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         updateButtonState();
     }
@@ -168,14 +179,9 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     }
 
     public void menuBarGame() {
-        Intent goToGame = new Intent(this, Game.class);
         startActivity(goToGame);
     }
-
-    public void menuBarHighScores() {
-        Intent goToHighScores = new Intent(this, HighScores.class);
-        startActivity(goToHighScores);
-    }
+    public void menuBarHighScores() { startActivity(goToHighScores); }
 
     // Button selected ? button colour = green : button colour = grey
     private void updateButtonState() {
@@ -256,12 +262,10 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
 
         editor.apply();
 
-        Intent goToGame = new Intent(this, Game.class);
         startActivity(goToGame);
     }
 
     private void cancelSelected() {
-        Intent goToTopMenu = new Intent(this, TopMenu.class);
         startActivity(goToTopMenu);
     }
 
