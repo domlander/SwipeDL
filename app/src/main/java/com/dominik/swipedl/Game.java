@@ -65,12 +65,11 @@ public class Game extends ActionBarActivity {
 
     private long timeRemaining;
 
+    GameCountDownTimer countDownTimer;
+    CountDownTimer delayTimer;
     CountDownTimer displayResultCountDownTimer;
-
     CountDownTimer preGameCountDownTimer;
     int preGameCountDownNumber;
-
-    GameCountDownTimer countDownTimer;
 
     // For standard timer in drag limit games.
     long startTime = 0;
@@ -235,7 +234,7 @@ public class Game extends ActionBarActivity {
         });
 
         preGameCountDownNumber = 3;
-
+        // Countdown that runs before each game.
         preGameCountDownTimer = new CountDownTimer(800, 1) {
             int textSize = 40;
             public void onTick(long millisUntilFinished) {
@@ -253,7 +252,7 @@ public class Game extends ActionBarActivity {
         };
 
         // Delay timer countdown. Gives activity time to load before countdown starts.
-        CountDownTimer delayTimer = new CountDownTimer(300, 300) {
+        delayTimer = new CountDownTimer(300, 300) {
             public void onTick(long millisUntilFinished) { }
             public void onFinish() { preGameCountDown(); }
         };
@@ -270,52 +269,21 @@ public class Game extends ActionBarActivity {
 
     } // onCreate() end
 
-    // Called for each number in the countdown.
-    private void preGameCountDown() {
-        gameState = GameState.COUNTDOWN;
-        countDownNumberTextView.setText(Integer.toString(preGameCountDownNumber));
-        countDownNumberTextView.setVisibility(View.VISIBLE);
-        if (preGameCountDownNumber > 0) {
-            preGameCountDownTimer.start();
-
-        } else {
-            preGameCountDownNumber = 3;
-            countDownNumberTextView.setVisibility(View.INVISIBLE);
-            startGame();
-        }
-    }
-
-    // Start the game timer.
-    public void startGame() {
-        gameState = GameState.ON;
-        numSwipes = 0;
-        dragCount.setText(Integer.toString(numSwipes));
-        timerValue.setVisibility(View.VISIBLE);
-
-        if (gameMode == 1) { // Timed game
-            countDownTimer = new GameCountDownTimer(gameTime, 10);
-            countDownTimer.start();
-
-        } else { // Drag limit game
-            startTime = System.currentTimeMillis();
-            timerHandler.postDelayed(timerRunnable, 0);
-        }
-
-        startButton.setVisibility(View.INVISIBLE);
-        pauseButton.setVisibility(View.VISIBLE);
-        playButton.setVisibility(View.INVISIBLE);
-        settingsButton.setVisibility(View.INVISIBLE);
-        highScoresButton.setVisibility(View.INVISIBLE);
-    }
-
+    // Starts the countdown to the game.
     public void onStartButtonClick(View v) {
-        startButton.setVisibility(View.INVISIBLE);
-        pauseButton.setVisibility(View.VISIBLE);
+        toggleButtonVisibility(true);
         timerValue.setVisibility(View.INVISIBLE);
-        playButton.setVisibility(View.INVISIBLE);
-        settingsButton.setVisibility(View.INVISIBLE);
-        highScoresButton.setVisibility(View.INVISIBLE);
         preGameCountDown();
+    }
+
+    // pause game
+    private void pauseGame() {
+        gameState = GameState.PAUSED;
+        highScoresButton.setVisibility(View.VISIBLE);
+        pausedText1.setVisibility(View.VISIBLE);
+        pausedText2.setVisibility(View.VISIBLE);
+        playButton.setVisibility(View.VISIBLE);
+        settingsButton.setVisibility(View.VISIBLE);
     }
 
     // Pauses the game clock.
@@ -323,13 +291,7 @@ public class Game extends ActionBarActivity {
         switch (gameState) {
             case COUNTDOWN:
                 preGameCountDownTimer.cancel();
-
-                gameState = GameState.PAUSED;
-                pausedText1.setVisibility(View.VISIBLE);
-                pausedText2.setVisibility(View.VISIBLE);
-                playButton.setVisibility(View.VISIBLE);
-                settingsButton.setVisibility(View.VISIBLE);
-                highScoresButton.setVisibility(View.VISIBLE);
+                pauseGame();
                 break;
 
             case ON:
@@ -338,13 +300,7 @@ public class Game extends ActionBarActivity {
                 } else {
                     timerHandler.removeCallbacks(timerRunnable);
                 }
-
-                gameState = GameState.PAUSED;
-                pausedText1.setVisibility(View.VISIBLE);
-                pausedText2.setVisibility(View.VISIBLE);
-                playButton.setVisibility(View.VISIBLE);
-                settingsButton.setVisibility(View.VISIBLE);
-                highScoresButton.setVisibility(View.VISIBLE);
+                pauseGame();
                 break;
 
             case PAUSED:
@@ -353,7 +309,7 @@ public class Game extends ActionBarActivity {
                     preGameCountDownTimer.start();
                     gameState = GameState.COUNTDOWN;
 
-                // game paused in game.
+                    // game paused in game.
                 } else {
                     if (gameMode == 1) {
                         countDownTimer = new GameCountDownTimer(timeRemaining, 10);
@@ -370,6 +326,68 @@ public class Game extends ActionBarActivity {
                 settingsButton.setVisibility(View.INVISIBLE);
                 highScoresButton.setVisibility(View.INVISIBLE);
                 break;
+        }
+    }
+
+    public void onSettingsButtonClick(View view) {
+        Intent goToSettings = new Intent(this, Settings.class);
+        startActivity(goToSettings);
+    }
+
+    public void onHighScoresButtonClick(View view) {
+        Intent goToHighScores = new Intent(this, HighScores.class);
+        startActivity(goToHighScores);
+    }
+
+    // Called for each number in the countdown.
+    private void preGameCountDown() {
+        gameState = GameState.COUNTDOWN;
+        countDownNumberTextView.setText(Integer.toString(preGameCountDownNumber));
+        countDownNumberTextView.setVisibility(View.VISIBLE);
+        if (preGameCountDownNumber > 0) {
+            preGameCountDownTimer.start();
+
+        } else {
+            preGameCountDownNumber = 3;
+            countDownNumberTextView.setVisibility(View.INVISIBLE);
+            startGame();
+        }
+    }
+
+    // Start the game timer - drags are counted from now.
+    public void startGame() {
+        gameState = GameState.ON;
+        numSwipes = 0;
+        dragCount.setText(Integer.toString(numSwipes));
+        timerValue.setVisibility(View.VISIBLE);
+
+        if (gameMode == 1) { // Timed game
+            countDownTimer = new GameCountDownTimer(gameTime, 10);
+            countDownTimer.start();
+
+        } else { // Drag limit game
+            startTime = System.currentTimeMillis();
+            timerHandler.postDelayed(timerRunnable, 0);
+        }
+        toggleButtonVisibility(true);
+    }
+
+    // When game start hide top menu & start button; show pause button.
+    // When game ends show top menu & start button; hide pause button.
+    private void toggleButtonVisibility(boolean visible) {
+        if (visible) {
+            pauseButton.setVisibility(View.VISIBLE);
+            highScoresButton.setVisibility(View.INVISIBLE);
+            playButton.setVisibility(View.INVISIBLE);
+            settingsButton.setVisibility(View.INVISIBLE);
+            startButton.setVisibility(View.INVISIBLE);
+
+        } else {
+            pauseButton.setVisibility(View.INVISIBLE);
+            highScoresButton.setVisibility(View.VISIBLE);
+            playButton.setVisibility(View.VISIBLE);
+            settingsButton.setVisibility(View.VISIBLE);
+            startButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -423,9 +441,9 @@ public class Game extends ActionBarActivity {
         String result;
         boolean isHighScore = false;
         if (minutes > 0) {
-            result = String.format("You made %d drags in%2d:%2d.%03ds", numSwipes, minutes, seconds, millis);
+            result = String.format("You made %d drags in %2d:%2d.%03ds", numSwipes, minutes, seconds, millis);
         } else {
-            result = String.format("You made %d drags in%2d.%03ds", numSwipes, seconds, millis);
+            result = String.format("You made %d drags in %2d.%03ds", numSwipes, seconds, millis);
         }
 
         if (newHighScore(millisSinceStart)) {
@@ -433,12 +451,7 @@ public class Game extends ActionBarActivity {
         }
 
         displayResult(result, isHighScore);
-
-        startButton.setVisibility(View.VISIBLE);
-        pauseButton.setVisibility(View.INVISIBLE);
-        playButton.setVisibility(View.VISIBLE);
-        settingsButton.setVisibility(View.VISIBLE);
-        highScoresButton.setVisibility(View.VISIBLE);
+        toggleButtonVisibility(false);
     }
 
     // If the score recorded is a high score, update the high scores page.
@@ -561,16 +574,6 @@ public class Game extends ActionBarActivity {
         Log.d(TAG, debugMessage);
     }
 
-    public void onSettingsButtonClick(View view) {
-        Intent goToSettings = new Intent(this, Settings.class);
-        startActivity(goToSettings);
-    }
-
-    public void onHighScoresButtonClick(View view) {
-        Intent goToHighScores = new Intent(this, HighScores.class);
-        startActivity(goToHighScores);
-    }
-
     // Inner class. Timer for time-limit games.
     public class GameCountDownTimer extends CountDownTimer {
 
@@ -600,12 +603,7 @@ public class Game extends ActionBarActivity {
             }
 
             displayResult(result, isHighScore);
-
-            startButton.setVisibility(View.VISIBLE);
-            pauseButton.setVisibility(View.INVISIBLE);
-            playButton.setVisibility(View.VISIBLE);
-            settingsButton.setVisibility(View.VISIBLE);
-            highScoresButton.setVisibility(View.VISIBLE);
+            toggleButtonVisibility(false);
         }
     }
 

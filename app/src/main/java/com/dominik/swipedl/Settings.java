@@ -14,13 +14,6 @@ import android.graphics.Color;
 public class Settings extends ActionBarActivity implements View.OnClickListener {
     // TODO image and audio
 
-    SharedPreferences sharedPrefs;
-
-    private int numPlayers;
-    private int gameMode;
-    private int gameModeOption;
-    private int difficulty;
-
     Button game_button;
     Button high_scores_button;
     Button one_player_button;
@@ -35,6 +28,13 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
     Button hard_button;
     Button save_button;
     Button cancel_button;
+
+    SharedPreferences sharedPrefs;
+
+    private int numPlayers;
+    private int gameMode;
+    private int gameModeOption;
+    private int difficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

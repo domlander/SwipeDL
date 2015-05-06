@@ -91,7 +91,8 @@
         android:layout_centerInParent="true"
         android:text="@string/new_high_score"
         android:textSize="28sp"
-        android:textColor="#ffd8d500" />
+        android:textStyle="bold"
+        android:textColor="#ffbdba00" />
 
     <TextView
         android:id="@+id/result"
